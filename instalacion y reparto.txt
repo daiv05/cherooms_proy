@@ -1,0 +1,137 @@
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+Para Vue JS
+
+1. Instalar Node 16.18.1
+https://nodejs.org/en/blog/release/v16.18.1/
+
+1.1 SOLO si tienen otra version de Node y NO quieren borrarla, usen NVM para manejar varias.
+https://rafaelneto.dev/blog/instalar-multiples-versiones-nodejs-windows/
+
+nvm install 16.18.1
+nvm use 16.18.1
+
+Con esto ya tienen activa esta otra version de Node, pueden regresar a la anterior cuando quieran con: nvm use [version]
+
+-- Estando en alguna terminal (por si no tienen yarn instalado):
+npm install --global yarn
+
+
+Abren el proyecto en el VS Code, abren una terminal y estando en la RAIZ (full-version):
+
+2. Instalando las dependencias del proyecto (tarda bastante)
+yarn install
+
+Seguramente de varios errores, ignorar.
+
+3. Para correr el proyecto siempre se ocupa
+yarn serve
+
+
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+Para Django
+
+1. Instalar ultima version de:
+Python... https://www.python.org/downloads/ (si en la instalacion pregunta algo sobre agregar al PATH, poner que si)
+postgresql... https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+
+2. Con postgres instalado y configurado, crear nuevo usuario en pgadmin4:
+user: admin
+pass: admin
+Luego crear base de datos: 
+tpi_proy (poner usuario admin como owner)
+
+3. Clonamos el proyecto:
+git clone https://github.com/daiv05/cherooms_proy
+
+4. Lo abrimos con el VS Code, y nos posicionamos en la RAIZ: cherooms_proy/backend (es donde está manage.py)
+
+pip install virtualenv (instalamos esto, por si no lo tienen)
+py -m venv env (creamos nuestro entorno virtual)
+
+ESTO PARA CADA VEZ QUE TRABAJEMOS en Django (se activa el entorno)
+.\env\Scripts\activate
+
+para desactivarlo antes de cerrar 
+deactivate
+
+5. Instalamos los requerimientos
+
+pip install req.txt
+
+6. Luego hacemos las migraciones, para que se generen las tablas en la base de datos a partir de nuestros models
+
+py manage.py makemigrations
+py manage.py migrate
+
+##
+makemigrations es para crear un archivo de migracion con cualquier cambio hecho en los modelos. models.py
+migrate es para aplicar los cambios generados con el comando anterior en las tablas de la base.
+##
+
+
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+REPARTO
+
+depar		dennis
+venta alquile	patrick
+ciudad	douglas
+pais		kevin
+publi alqui		alexis
+listado ameni	karla
+perfil	david 
+chero		juan
+lista hobbie	oscar
+registro busq	dennis
+hobbie	patrick
+lista pref		douglas
+prefe		kevin
+foto		alexis
+lista foto		karla
+amenidad		oscar
+
+
+PASOS PARA AÑADIR UN MODELO A LA API
+
+En este orden:
+1. Crear Modelo en models.py (ya están creados)	(/backend/cherooms)
+2. Crear clase en serializers.py 			(/backend/cherooms)
+3. Crear 2 clases en views.py 			(/backend/cherooms)
+4. Añadir 2 urls en urls.py 				(/backend/backend)
+
+En cada archivo ya está un ejemplo, solo hay que copiar las mismas clases y metodos
+y adecuarlas al Modelo que toque.
+
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+
+
+
+
+
+ignorar esto
+
+
+class RelatedFieldAlternative(serializers.PrimaryKeyRelatedField):
+    def __init__(self, **kwargs):
+        self.serializer = kwargs.pop('serializer', None)
+        if self.serializer is not None and not issubclass(self.serializer, serializers.Serializer):
+            raise TypeError('"serializer" is not a valid serializer class')
+
+        super().__init__(**kwargs)
+
+    def use_pk_only_optimization(self):
+        return False if self.serializer else True
+
+    def to_representation(self, instance):
+        if self.serializer:
+            return self.serializer(instance, context=self.context).data
+        return super().to_representation(instance)
+        
