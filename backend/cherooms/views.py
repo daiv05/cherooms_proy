@@ -61,7 +61,7 @@ class PerfilUserDetail(APIView):
         perfil.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# AMBAS CLASES POR CADA MODELO
+# AMBAS CLASES CON TODOS ESOS METODOS POR CADA MODELO
 # -------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
