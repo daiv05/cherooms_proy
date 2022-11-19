@@ -46,7 +46,14 @@ urlpatterns = [
     # Foto
     path('foto', views.FotoList.as_view()),
     path('foto/<int:pk>', views.FotoDetail.as_view()),
-
+    #---------------------------------------------------------------------------------
+    # PAIS
+    path('pais/', views.PaisList.as_view()),
+    path('pais/<int:pk>/', views.PaisDetail.as_view()),
+    #---------------------------------------------------------------------------------
+    # PREFERENCIA
+    path('preferencia/', views.PreferenciaList.as_view()),
+    path('preferencia/<int:pk>/', views.PreferenciaDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

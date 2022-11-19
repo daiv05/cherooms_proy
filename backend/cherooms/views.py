@@ -259,3 +259,103 @@ class FotoDetail(APIView):
         foto = self.get_object(pk)
         foto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# -------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+class PaisList(APIView):
+    """
+    List all Pais, or create a new Pais.
+    """
+
+    def get(self, request, format=None):
+        pais = Pais.objects.all()
+        serializer = Pais(pais, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = Pais(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PaisDetail(APIView):
+    """
+    Retrieve, update or delete a Pais instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return Pais.objects.get(pk=pk)
+        except Pais.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        pais = self.get_object(pk)
+        serializer = Pais(pais)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        pais = self.get_object(pk)
+        serializer = PaisSerializer(pais, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        pais = self.get_object(pk)
+        pais.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# -------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+class PreferenciaList(APIView):
+    """
+    List all Preferencia, or create a new Pais.
+    """
+
+    def get(self, request, format=None):
+        preferencia = Preferencia.objects.all()
+        serializer = Preferencia(preferencia, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = Preferencia(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PreferenciaDetail(APIView):
+    """
+    Retrieve, update or delete a Preferencia instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return Preferencia.objects.get(pk=pk)
+        except Preferencia.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        preferencia = self.get_object(pk)
+        serializer = Preferencia(preferencia)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        preferencia = self.get_object(pk)
+        serializer = PreferenciaSerializer(preferencia, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        preferencia = self.get_object(pk)
+        preferencia.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
