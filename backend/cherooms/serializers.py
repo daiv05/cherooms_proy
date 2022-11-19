@@ -42,7 +42,7 @@ class DepartamentoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        #response['pais_id'] = PaisSerializer(instance.pais_id).data
+        response['pais'] = PaisSerializer(instance.pais).data
         return response
 
 class HistorialBusquedaSerializer(serializers.ModelSerializer):
@@ -74,18 +74,8 @@ class PaisSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pais
         fields = '__all__'
-    
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response['pais_id'] = PaisSerializer(instance.pais_id).data
-        return response
 
 class PreferenciaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Preferencia
         fields = '__all__'
-    
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response['preferencia_id'] = PreferenciaSerializer(instance.preferencia_id).data
-        return response

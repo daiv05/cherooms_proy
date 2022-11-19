@@ -271,11 +271,11 @@ class PaisList(APIView):
 
     def get(self, request, format=None):
         pais = Pais.objects.all()
-        serializer = Pais(pais, many=True)
+        serializer = PaisSerializer(pais, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = Pais(data=request.data)
+        serializer = PaisSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -294,7 +294,7 @@ class PaisDetail(APIView):
 
     def get(self, request, pk, format=None):
         pais = self.get_object(pk)
-        serializer = Pais(pais)
+        serializer = PaisSerializer(pais)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
