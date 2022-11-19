@@ -69,3 +69,16 @@ class FotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Foto
         fields = '__all__'
+
+
+# --------------VentaAlquiler & Hobbie-------------------------------------------------------------------
+class VentaAlquilerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VentaAlquiler
+        fields = '__all__'
+
+class HobbieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hobbie
+        fields = '__all__'
+# ---------------------------------------------------------------------------------

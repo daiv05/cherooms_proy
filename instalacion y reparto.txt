@@ -65,7 +65,7 @@ pip install -r req.txt
 
 6. Luego hacemos las migraciones, para que se generen las tablas en la base de datos a partir de nuestros models
 
-py manage.py makemigrations
+py manage.py makemigrationspy
 py manage.py migrate
 
 ##

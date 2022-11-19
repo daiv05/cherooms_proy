@@ -46,6 +46,14 @@ urlpatterns = [
     # Foto
     path('foto', views.FotoList.as_view()),
     path('foto/<int:pk>', views.FotoDetail.as_view()),
+    #---------------------------------------------------------------------------------
+    # VENTAALQUILER
+    path('venta_alquiler', views.VentaAlquilerList.as_view()),
+    path('venta_alquiler/<int:pk>', views.VentaAlquilerDetail.as_view()),
+    #---------------------------------------------------------------------------------
+    # HOBBIE
+    path('hobbie', views.HobbieList.as_view()),
+    path('hobbie/<int:pk>', views.HobbieDetail.as_view()),
 
 ]
 
