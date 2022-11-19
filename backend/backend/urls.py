@@ -3,6 +3,7 @@ from django.urls import *
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
+from cherooms import views
 from cherooms.views import *
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -37,7 +38,15 @@ urlpatterns = [
     #---------------------------------------------------------------------------------
     # PREFERENCIA
     path('preferencia/', views.PreferenciaList.as_view()),
-    path('preferencia/<int:pk>/', views.PreferenciaDetail.as_view()),
+    path('preferencia/<int:pk>/', views.PreferenciaDetail.as_view()),    #---------------------------------------------------------------------------------
+    # VENTAALQUILER
+    path('venta_alquiler', views.VentaAlquilerList.as_view()),
+    path('venta_alquiler/<int:pk>', views.VentaAlquilerDetail.as_view()),
+    #---------------------------------------------------------------------------------
+    # HOBBIE
+    path('hobbie', views.HobbieList.as_view()),
+    path('hobbie/<int:pk>', views.HobbieDetail.as_view()),
+
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
