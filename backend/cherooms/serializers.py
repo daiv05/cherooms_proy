@@ -29,7 +29,7 @@ class PerfilUserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['ciudad_id'] = CiudadSerializer(instance.ciudad_id).data
+        #response['ciudad_id'] = CiudadSerializer(instance.ciudad_id).data
         return response
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ class DepartamentoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['pais_id'] = PaisSerializer(instance.pais_id).data
+        #response['pais_id'] = PaisSerializer(instance.pais_id).data
         return response
 
 class HistorialBusquedaSerializer(serializers.ModelSerializer):

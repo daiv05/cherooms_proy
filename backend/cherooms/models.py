@@ -1,7 +1,9 @@
+from datetime import datetime
 from django.db import models
 
-# Create your models here.
-
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/foto_<id>/<filename>
+    return 'foto_{0}/{1}'.format(instance.foto_id, filename)
 
 class Amenidad(models.Model):
     amenidad_id = models.AutoField(primary_key=True)
@@ -40,7 +42,7 @@ class Departamento(models.Model):
 
 class Foto(models.Model):
     foto_id = models.AutoField(primary_key=True)
-    foto_lugar = models.CharField(max_length=1024)
+    foto_lugar = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
 
     class Meta:
         db_table = 'foto'
@@ -50,7 +52,7 @@ class HistorialBusqueda(models.Model):
     busqueda_id = models.AutoField(primary_key=True)
     perfil = models.ForeignKey('PerfilUser', models.DO_NOTHING, db_column='perfil_id')
     busqueda = models.CharField(max_length=1024)
-    fecha_busqueda = models.DateField()
+    fecha_busqueda = models.DateTimeField(default=datetime.now())
 
     class Meta:
         db_table = 'historial_busqueda'
