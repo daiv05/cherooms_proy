@@ -13,3 +13,12 @@ class PerfilUserSerializer(serializers.ModelSerializer):
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
+class DepartamentoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Departamento
+        fields = '__all__'
+
+class HistorialBusquedaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HistorialBusqueda
+        fields = '__all__'

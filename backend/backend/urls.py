@@ -32,6 +32,18 @@ urlpatterns = [
     path('perfil/<int:pk>/', views.PerfilUserDetail.as_view()),
     #---------------------------------------------------------------------------------
     #---------------------------------------------------------------------------------
+    # DEPARTAMENTOS
+
+    path('departamento/', views.DepartamentoList.as_view()),
+    path('departamento/<int:pk>/', views.DepartamentoDetail.as_view()),
+
+
+    #---------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------------
+    # HistorialBusqueda
+
+    path('historial_busqueda', views.HistorialBusquedaList.as_view()),
+    path('historial_busqueda/<int:pk>', views.HistorialBusquedaDetail.as_view()),
 ]
 
 if settings.DEBUG:
