@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #Para que funcione el CORS
-    'corsheaders.middleware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -95,7 +95,7 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.AllowAny',
+        'rest_framework.permissions.AllowAny',
     )
 }
 
@@ -120,7 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # White listing the localhost:8080 port
 # for Vue.js development server
 CORS_ORIGIN_WHITELIST = [
-    'http://127.0.0.1:8080'
     'http://localhost:8080'
 ]
 
