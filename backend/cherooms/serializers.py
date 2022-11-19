@@ -29,7 +29,7 @@ class PerfilUserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        #response['ciudad_id'] = CiudadSerializer(instance.ciudad_id).data
+        #response['ciudad'] = CiudadSerializer(instance.ciudad).data
         return response
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ class HistorialBusquedaSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['perfil_id'] = PerfilUserSerializer(instance.perfil_id).data
+        response['perfil'] = PerfilUserSerializer(instance.perfil).data
         return response
 
 class PublicacionAlquilerSerializer(serializers.ModelSerializer):
@@ -62,7 +62,7 @@ class PublicacionAlquilerSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['perfil_id'] = PerfilUserSerializer(instance.perfil_id).data
+        response['perfil'] = PerfilUserSerializer(instance.perfil).data
         return response
 
 class FotoSerializer(serializers.ModelSerializer):
@@ -86,6 +86,12 @@ class VentaAlquilerSerializer(serializers.ModelSerializer):
     class Meta:
         model = VentaAlquiler
         fields = '__all__'
+    
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['perfil'] = PerfilUserSerializer(instance.perfil).data
+        response['publicacion'] = PublicacionAlquilerSerializer(instance.publicacion).data
+        return response
 
 class HobbieSerializer(serializers.ModelSerializer):
     class Meta:

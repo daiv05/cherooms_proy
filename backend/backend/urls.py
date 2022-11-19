@@ -40,12 +40,12 @@ urlpatterns = [
     path('preferencia/', views.PreferenciaList.as_view()),
     path('preferencia/<int:pk>/', views.PreferenciaDetail.as_view()),    #---------------------------------------------------------------------------------
     # VENTAALQUILER
-    path('venta_alquiler', views.VentaAlquilerList.as_view()),
-    path('venta_alquiler/<int:pk>', views.VentaAlquilerDetail.as_view()),
+    path('venta_alquiler/', views.VentaAlquilerList.as_view()),
+    path('venta_alquiler/<int:pk>/', views.VentaAlquilerDetail.as_view()),
     #---------------------------------------------------------------------------------
     # HOBBIE
-    path('hobbie', views.HobbieList.as_view()),
-    path('hobbie/<int:pk>', views.HobbieDetail.as_view()),
+    path('hobbie/', views.HobbieList.as_view()),
+    path('hobbie/<int:pk>/', views.HobbieDetail.as_view()),
 
 ]
 
