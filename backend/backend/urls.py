@@ -27,40 +27,29 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
 
     #---------------------------------------------------------------------------------
-    #---------------------------------------------------------------------------------
+    # PERFIL
     path('perfil/', views.PerfilUserList.as_view()),
     path('perfil/<int:pk>/', views.PerfilUserDetail.as_view()),
     #---------------------------------------------------------------------------------
-    #---------------------------------------------------------------------------------
     # DEPARTAMENTOS
-
     path('departamento/', views.DepartamentoList.as_view()),
     path('departamento/<int:pk>/', views.DepartamentoDetail.as_view()),
-
-
-    #---------------------------------------------------------------------------------
     #---------------------------------------------------------------------------------
     # HistorialBusqueda
-
     path('historial_busqueda', views.HistorialBusquedaList.as_view()),
     path('historial_busqueda/<int:pk>', views.HistorialBusquedaDetail.as_view()),
-
-
-    #---------------------------------------------------------------------------------
     #---------------------------------------------------------------------------------
     # PublicacionAlquiler
-
     path('publicacion_alquiler', views.PublicacionAlquilerList.as_view()),
     path('publicacion_alquiler/<int:pk>', views.PublicacionAlquilerDetail.as_view()),
-
-    #---------------------------------------------------------------------------------
     #---------------------------------------------------------------------------------
     # Foto
-
     path('foto', views.FotoList.as_view()),
     path('foto/<int:pk>', views.FotoDetail.as_view()),
 
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

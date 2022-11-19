@@ -8,10 +8,6 @@ from rest_framework.views import APIView
 from django.http import *
 from decimal import Decimal
 
-# Create your views here.
-
-# ---------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 class PerfilUserList(APIView):
@@ -116,7 +112,6 @@ class DepartamentoDetail(APIView):
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
-
 class HistorialBusquedaList(APIView):
     """
     List all HistorialBusqueda, or create a new HistorialBusqueda.
@@ -213,14 +208,6 @@ class PublicacionAlquilerDetail(APIView):
         publicacionalquiler = self.get_object(pk)
         publicacionalquiler.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)       
-
-
-
-
-
-
-
-
 
 # -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
