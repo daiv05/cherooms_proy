@@ -4,3 +4,5 @@ from django.contrib import admin
 from .models import *
 
 admin.site.register(PerfilUser)
+admin.site.register(PublicacionAlquiler)
+admin.site.register(Foto)

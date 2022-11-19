@@ -22,3 +22,13 @@ class HistorialBusquedaSerializer(serializers.ModelSerializer):
     class Meta:
         model = HistorialBusqueda
         fields = '__all__'
+
+class PublicacionAlquilerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PublicacionAlquiler
+        fields = '__all__'
+
+class FotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Foto
+        fields = '__all__'
