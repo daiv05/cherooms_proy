@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import *
+from django.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
@@ -11,6 +11,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
 
+    path('chero/', views.CheroList.as_view()),
+    path('chero/<int:pk>/', views.CheroDetail.as_view()),
+    path('ciudad/', views.CiudadList.as_view()),
+    path('ciudad/<int:pk>/', views.CiudadDetail.as_view()),
     #---------------------------------------------------------------------------------
     # PERFIL
     path('perfil/', views.PerfilUserList.as_view()),
@@ -38,7 +42,8 @@ urlpatterns = [
     #---------------------------------------------------------------------------------
     # PREFERENCIA
     path('preferencia/', views.PreferenciaList.as_view()),
-    path('preferencia/<int:pk>/', views.PreferenciaDetail.as_view()),    #---------------------------------------------------------------------------------
+    path('preferencia/<int:pk>/', views.PreferenciaDetail.as_view()),    
+    #---------------------------------------------------------------------------------
     # VENTAALQUILER
     path('venta_alquiler/', views.VentaAlquilerList.as_view()),
     path('venta_alquiler/<int:pk>/', views.VentaAlquilerDetail.as_view()),

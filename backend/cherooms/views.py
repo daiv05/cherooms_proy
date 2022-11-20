@@ -8,6 +8,98 @@ from rest_framework.views import APIView
 from django.http import Http404
 from decimal import Decimal
 
+class CheroList(APIView):
+    """
+    List all Chero, or create a new Chero.
+    """
+
+    def get(self, request, format=None):
+        chero = Cheros.objects.all()
+        serializer = CheroSerializer(chero, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = CheroSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CheroDetail(APIView):
+    """
+    Retrieve, update or delete a Chero instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return Cheros.objects.get(pk=pk)
+        except Cheros.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        chero = self.get_object(pk)
+        serializer = CheroSerializer(chero)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        chero = self.get_object(pk)
+        serializer = CheroSerializer(chero, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        chero = self.get_object(pk)
+        chero.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CiudadList(APIView):
+    """
+    List all Ciudad, or create a new Ciudad.
+    """
+
+    def get(self, request, format=None):
+        ciudad = Ciudad.objects.all()
+        serializer = CiudadSerializer(ciudad, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = CiudadSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CiudadDetail(APIView):
+    """
+    Retrieve, update or delete a Ciudad instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return Ciudad.objects.get(pk=pk)
+        except Ciudad.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        ciudad = self.get_object(pk)
+        serializer = CiudadSerializer(ciudad)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        ciudad = self.get_object(pk)
+        serializer = CiudadSerializer(ciudad, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        ciudad = self.get_object(pk)
+        ciudad.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 class PerfilUserList(APIView):

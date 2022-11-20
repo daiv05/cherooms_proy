@@ -31,6 +31,27 @@ class PerfilUserSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         #response['ciudad'] = CiudadSerializer(instance.ciudad).data
         return response
+
+class CiudadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ciudad
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['departamento'] = DepartamentoSerializer(instance.departamento).data
+        return response
+
+class CheroSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cheros
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['perfil_user'] = PerfilUserSerializer(instance.perfil_user).data
+        response['favorito_user'] = PerfilUserSerializer(instance.favorito_user).data
+        return response
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------

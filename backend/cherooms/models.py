@@ -1,9 +1,13 @@
 from datetime import datetime
 from django.db import models
 
-def user_directory_path(instance, filename):
+def publicacion_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/foto_<id>/<filename>
     return 'foto_{0}/{1}'.format(instance.foto_id, filename)
+
+def usuario_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/foto_<id>/<filename>
+    return 'perfil_{0}/{1}'.format(instance.perfil_id, filename)
 
 class Amenidad(models.Model):
     amenidad_id = models.AutoField(primary_key=True)
@@ -42,7 +46,7 @@ class Departamento(models.Model):
 
 class Foto(models.Model):
     foto_id = models.AutoField(primary_key=True)
-    foto_lugar = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    foto_lugar = models.ImageField(upload_to=publicacion_directory_path, blank=True, null=True)
 
     class Meta:
         db_table = 'foto'
@@ -124,7 +128,7 @@ class PerfilUser(models.Model):
     user_facebook = models.CharField(max_length=1024, blank=True, null=True)
     user_insta = models.CharField(max_length=1024, blank=True, null=True)
     user_twitter = models.CharField(max_length=1024, blank=True, null=True)
-    foto_perfil = models.CharField(max_length=1024, blank=True, null=True)
+    foto_perfil = models.ImageField(upload_to=usuario_directory_path, blank=True, null=True)
     genero = models.CharField(max_length=1024)
 
     class Meta:
