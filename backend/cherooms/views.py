@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from django.http import *
+from django.http import Http404
 from decimal import Decimal
 
 # ---------------------------------------------------------------------------------
@@ -321,11 +321,11 @@ class PreferenciaList(APIView):
 
     def get(self, request, format=None):
         preferencia = Preferencia.objects.all()
-        serializer = Preferencia(preferencia, many=True)
+        serializer = PreferenciaSerializer(preferencia, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = Preferencia(data=request.data)
+        serializer = PreferenciaSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -344,7 +344,7 @@ class PreferenciaDetail(APIView):
 
     def get(self, request, pk, format=None):
         preferencia = self.get_object(pk)
-        serializer = Preferencia(preferencia)
+        serializer = PreferenciaSerializer(preferencia)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
