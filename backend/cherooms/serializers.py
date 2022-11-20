@@ -98,3 +98,13 @@ class HobbieSerializer(serializers.ModelSerializer):
         model = Hobbie
         fields = '__all__'
 # ---------------------------------------------------------------------------------
+
+class ListaAmenidadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ListaAmenidad
+        fields = '__all__'
+
+class ListaFotosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ListaFotos
+        fields = '__all__'
