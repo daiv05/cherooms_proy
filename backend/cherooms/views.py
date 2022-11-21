@@ -18,6 +18,10 @@ from django.views.generic.edit import FormView
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import AuthenticationForm
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 class PerfilUserList(APIView):
@@ -271,7 +275,10 @@ class FotoDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class CheroList(APIView):
-
+    #permission_classes = (IsAuthenticated,)   
+    #authentication_classes = (TokenAuthentication,)
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     def get(self,request, *args, **kwargs):
         id_usuario = request.user.id
         print(request.user)
@@ -310,6 +317,11 @@ class Login(FormView):
             return super(Login,self).form_valid(form)
         return super().form_valid(form)
 #vista para logiar y authenticar a los usuarios
+class Logout(APIView):
+    def get(self, request, format = None):
+        request.user.auth_token.delete()
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
 def index(request):
     return render(request,"index.html")
 

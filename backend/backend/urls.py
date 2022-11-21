@@ -59,7 +59,8 @@ urlpatterns = [
     #path('',include(router.urls))
     path('api_generate_token/',views_token.obtain_auth_token),
     #lista de cheros por usuario
-    path('chero_list/',views.CheroList.as_view(),name="chero-list")
+    path('chero_list/',views.CheroList.as_view(),name="chero-list"),
+    path('logout/',views.Logout.as_view(),name="logout"),
 
 ]
 
