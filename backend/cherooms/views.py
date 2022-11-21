@@ -459,3 +459,107 @@ class HobbieDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+class ListaAmenidadList(APIView):
+    """
+    List all ListaAmenidad, or create a new ListaAmenidad.
+    """
+
+    def get(self, request, format=None):
+        listaAmenidad = ListaAmenidad.objects.all()
+        serializer = ListaAmenidadSerializer(listaAmenidad, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = ListaAmenidadSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ListaAmenidadDetail(APIView):
+    """
+    Retrieve, update or delete a ListaAmenidad instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return ListaAmenidad.objects.get(pk=pk)
+        except ListaAmenidad.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        listaAmenidad = self.get_object(pk)
+        serializer = ListaAmenidadSerializer(listaAmenidad)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        listaAmenidad = self.get_object(pk)
+        serializer = ListaAmenidadSerializer(listaAmenidad, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        listaAmenidad = self.get_object(pk)
+        listaAmenidad.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+class ListaFotosList(APIView):
+    """
+    List all ListaFotos, or create a new ListaFotos.
+    """
+
+    def get(self, request, format=None):
+        listaFotos = ListaFotos.objects.all()
+        serializer = ListaFotosSerializer(listaFotos, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = ListaFotosSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ListaFotosDetail(APIView):
+    """
+    Retrieve, update or delete a ListaFotos instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return ListaFotos.objects.get(pk=pk)
+        except ListaFotos.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        listaFotos = self.get_object(pk)
+        serializer = ListaFotosSerializer(listaFotos)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        listaFotos = self.get_object(pk)
+        serializer = ListaFotosSerializer(listaFotos, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        listaFotos = self.get_object(pk)
+        listaFotos.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
