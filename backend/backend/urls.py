@@ -6,6 +6,12 @@ from django.urls import path
 from cherooms import views
 from cherooms.views import *
 from rest_framework.urlpatterns import format_suffix_patterns
+from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views as views_token
+
+#router = DefaultRouter()
+#router.register(r'users', UserViewSet, basename='users')
+app_name = "api"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,7 +19,7 @@ urlpatterns = [
 
     # ---------------------------------------------------------------------------------
     # PERFIL
-    path('perfil/', views.PerfilUserList.as_view()),
+    path('perfil/', views.PerfilUserList.as_view(),name="perfil"),
     path('perfil/<int:pk>/', views.PerfilUserDetail.as_view()),
     # ---------------------------------------------------------------------------------
     # DEPARTAMENTOS
@@ -74,6 +80,15 @@ urlpatterns = [
     # ListaFotos
     path('lista_fotos/', views.ListaFotosList.as_view()),
     path('lista_fotos/<int:pk>/', views.ListaFotosDetail.as_view()),
+
+    #login
+    path('login/',Login.as_view(),name="login"),
+    path('index/',index, name="index"),
+    #path('',include(router.urls))
+    path('api_generate_token/',views_token.obtain_auth_token),
+    #lista de cheros por usuario
+    path('chero_list/',views.CheroList.as_view(),name="chero-list"),
+    path('logout/',views.Logout.as_view(),name="logout"),
 
 ]
 

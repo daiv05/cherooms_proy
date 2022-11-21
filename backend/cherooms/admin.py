@@ -6,6 +6,8 @@ from .models import *
 admin.site.register(PerfilUser)
 admin.site.register(PublicacionAlquiler)
 admin.site.register(Foto)
+admin.site.register(Cheros)
+
 admin.site.register(Pais)
 admin.site.register(Preferencia)
 admin.site.register(Departamento)

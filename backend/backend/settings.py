@@ -60,6 +60,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'backend.urls'
+#VARIABLE QUE ESTABLECE CUAL SERA EL MODELO QUE RECIBIRA LA AUTENTICACION
+#AUTH_USER_MODEL = 'cherooms.PerfilUser'
 
 TEMPLATES = [
     {
@@ -87,17 +89,25 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'tpi_proy',
-        'USER': 'admin',
-        'PASSWORD': 'admin',
+        'USER': 'postgres',
+        'PASSWORD': 'mustanGT500',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
 
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSIONS_CLASSES': (
+        "rest_framework.authentication.TokenAuthentication",
         'rest_framework.permissions.AllowAny',
-    )
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 # Password validation

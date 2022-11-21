@@ -1,4 +1,7 @@
+from django.contrib.auth import password_validation, authenticate
+from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 from .models import *
 
 
@@ -77,6 +80,44 @@ class FotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Foto
         fields = '__all__'
+
+class CherosSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Cheros
+        fields = '__all__'
+
+class UserModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+        )
+class PerfilUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PerfilUser
+        fields = "__all__"
+
+class UserLoginSerializer(serializers.Serializer):
+    #campos requeridos para hacer le login
+    username = serializers.EmailField()
+    password = serializers.CharField(min_length=8, max_length=64)
+
+    #validacion de los datos
+    def validate(self,data):
+        user = authenticate(username = data['username'] , password = data["password"])
+        if not user:
+            raise serializers.ValidationError("Las credenciales no estan registradas")
+        
+        self.context["user"] = user
+        return data
+    def create(self, data):
+        #crear el token o generarlo
+        token, created = Token.objects.get_or_create(user = self.context["user"])
+        return self.context["user"], token.key
 
 
 class PaisSerializer(serializers.ModelSerializer):
