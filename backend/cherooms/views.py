@@ -1,13 +1,23 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User #es el modelo para realizar la autenticación 
 from .models import *
 from .serializers import *
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,action
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from django.http import *
 from decimal import Decimal
 
+#para el login
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache  import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.generic.edit import FormView
+from django.contrib.auth import login, logout, authenticate
+from django.http import HttpResponseRedirect
+from django.contrib.auth.forms import AuthenticationForm
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 class PerfilUserList(APIView):
@@ -259,3 +269,65 @@ class FotoDetail(APIView):
         foto = self.get_object(pk)
         foto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CheroList(APIView):
+
+    def get(self,request, *args, **kwargs):
+        id_usuario = request.user.id
+        print(request.user)
+        perfil = PerfilUser.objects.get(user = id_usuario)
+        mis_cheros = Cheros.objects.filter(perfil_user = perfil.perfil_id)
+        serializer = PerfilUserSerializer(self.obtener_perfil_cheros(mis_cheros) ,many = True)
+        print(serializer.data)
+        return Response(serializer.data)
+
+    def obtener_perfil_cheros(self,mis_cheros):
+        lista_perfil_cheros = []
+        for chero in mis_cheros:
+            lista_perfil_cheros.append(PerfilUser.objects.get(perfil_id = chero.favorito_user.perfil_id))
+        return lista_perfil_cheros
+
+class Login(FormView):
+    template_name = "login.html"
+    form_class = AuthenticationForm
+    success_url = reverse_lazy('chero-list')
+    #metodo que 
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def dispatch(self, request, *args,**kwargs):
+        if request.user.is_authenticated:
+            print(request.user.username)
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return super(Login,self).dispatch(request,*args,**kwargs)
+    def form_valid(self, form):
+        print(form)
+        user = authenticate(username = form.cleaned_data["username"], password = form.cleaned_data["password"])
+        #ahora hay que buscar el token asociado a este usuario
+        token = Token.objects.get_or_create(user = user)
+        if token:
+            login(self.request,form.get_user())
+            return super(Login,self).form_valid(form)
+        return super().form_valid(form)
+#vista para logiar y authenticar a los usuarios
+def index(request):
+    return render(request,"index.html")
+
+"""
+class UserViewSet(viewsets.GenericViewSet):
+
+    queryset = User.objects.filter(is_active = True)
+    serializer_class = UserModelSerializer
+
+    @action(detail=False, methods = ['post'])
+    def login(self, request):
+        "funcion para logearse"
+        serializer = UserLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user, token = serializer.save()
+        data = {
+            'user' : UserModelSerializer(user).data,
+            'acces_token' : token
+        }
+        return Response(data, status = status.HTTP_201_CREATED)
+"""

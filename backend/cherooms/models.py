@@ -1,9 +1,12 @@
 from datetime import datetime
 from django.db import models
+from django.contrib.auth.models import User
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/foto_<id>/<filename>
     return 'foto_{0}/{1}'.format(instance.foto_id, filename)
+def perfil_directory_path(instance,filename):
+    return 'perfil_{0}/{1}'.format(instance.perfil_id, filename)
 
 class Amenidad(models.Model):
     amenidad_id = models.AutoField(primary_key=True)
@@ -17,9 +20,12 @@ class Cheros(models.Model):
     cheros_id = models.AutoField(primary_key=True)
     perfil_user = models.ForeignKey('PerfilUser', models.DO_NOTHING, related_name='perfil')
     favorito_user = models.ForeignKey('PerfilUser', models.DO_NOTHING, related_name='favorito')
-
+    
     class Meta:
         db_table = 'cheros'
+    
+    def __str__(self) :
+        return "{} es amigo de {}".format(self.perfil_user,self.favorito_user)
 
 
 class Ciudad(models.Model):
@@ -108,30 +114,81 @@ class Pais(models.Model):
 
     class Meta:
         db_table = 'pais'
+"""
+class UsuarioManager(BaseUserManager):
+    def create_user(self,email,username,nombre_user,apellidos_user,password = None,genero='Masculino'):
+        if not email:
+            raise("Necesita un correo electronico para registrarse")
+        usuario = self.model(
+            username = username,
+            email = self.normalize_email(email),
+            nombre_user = nombre_user,
+            apellidos_user = apellidos_user,
+            genero = genero
+            )
+        usuario.set_password(password)
+        usuario.save()
+        return usuario
 
+    def create_superuser(self,email,username,nombre_user,apellidos_user,password,genero='Masculino'):
+        usuario = self.create_user(
+            email,
+            username,
+            nombre_user,
+            apellidos_user,
+            genero,
+            password
+        )
+        usuario.usuario_administrador = True
+        usuario.admin = True
+        usuario.staff = True
+        usuario.save()
+        return usuario
+
+"""
 
 class PerfilUser(models.Model):
     perfil_id = models.AutoField(primary_key=True)
-    ciudad = models.ForeignKey('Ciudad', models.DO_NOTHING, db_column='ciudad_id')
-    email = models.CharField(max_length=1024)
-    passwrd = models.CharField(max_length=1024)
+    ciudad = models.ForeignKey('Ciudad', models.DO_NOTHING, db_column='ciudad_id',blank= True, null=True)
+    email = models.CharField(max_length=1024, unique= True)
     nombre_user = models.CharField(max_length=1024)
     apellidos_user = models.CharField(max_length=1024)
     edad = models.IntegerField(blank=True, null=True)
     biografia = models.CharField(max_length=1024, blank=True, null=True)
     telefono = models.CharField(max_length=1024, blank=True, null=True)
-    username = models.CharField(max_length=1024)
+    username = models.CharField(max_length=1024,unique= True)
     user_facebook = models.CharField(max_length=1024, blank=True, null=True)
     user_insta = models.CharField(max_length=1024, blank=True, null=True)
     user_twitter = models.CharField(max_length=1024, blank=True, null=True)
-    foto_perfil = models.CharField(max_length=1024, blank=True, null=True)
+    foto_perfil = models.ImageField(upload_to=perfil_directory_path, blank = True, null = True)
     genero = models.CharField(max_length=1024)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    #staff = models.BooleanField(default=False)
+    #admin = models.BooleanField(default=False)
+    #usuario_administrador = models.BooleanField(default=False)
+    #objects = UsuarioManager()
+    #USERNAME_FIELD = 'username'
+    #REQUIRED_FIELDS = ['email','nombre_user','apellidos_user','genero']
 
     class Meta:
         db_table = 'perfil_user'
     
     def __str__(self):
         return self.nombre_user
+    """
+    #para los permisos de poder ver el admin
+    def has_perm(self,perm,obj = None):
+        return True
+
+    def has_module_perms(self,app_label):
+        return True
+    @property
+    def is_staff(self):
+        return self.usuario_administrador
+    """
+    
+
 
 
 class Preferencia(models.Model):
