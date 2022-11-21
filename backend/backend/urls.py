@@ -47,6 +47,13 @@ urlpatterns = [
     path('hobbie/', views.HobbieList.as_view()),
     path('hobbie/<int:pk>/', views.HobbieDetail.as_view()),
     #---------------------------------------------------------------------------------
+    # LISTADODEHOBBIES
+    path('listadodehobbies/', views.ListadohobbiesList.as_view()),
+    path('listadodehobbies/<int:pk>/', views.ListadohobbiesDetail.as_view()),
+    #---------------------------------------------------------------------------------
+    # AMENIDADES
+    path('amenidades/', views.AmenidadList.as_view()),
+    path('amenidades/<int:pk>/', views.AmenidadDetail.as_view()),    #---------------------------------------------------------------------------------
     # ListaAmenidad
     path('lista_amenidad/', views.ListaAmenidadList.as_view()),
     path('lista_amenidad/<int:pk>/', views.ListaAmenidadDetail.as_view()),

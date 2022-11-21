@@ -461,6 +461,104 @@ class HobbieDetail(APIView):
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
+class ListadohobbiesList(APIView):
+    """
+    List all Hobbie, or create a new Hobbie.
+    """
+
+    def get(self, request, format=None):
+        listahobbie = Listadohobbies.objects.all()
+        serializer = ListadohobbiesSerializer(listahobbie, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = ListadohobbiesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ListadohobbiesDetail(APIView):
+    """
+    Retrieve, update or delete a ListaHobbie instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return Listadohobbies.objects.get(pk=pk)
+        except Listadohobbies.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        listaHobbie = self.get_object(pk)
+        serializer = ListadohobbiesSerializer(listaHobbie)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        listaHobbie= self.get_object(pk)
+        serializer = ListadohobbiesSerializer(listaHobbie, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        listaHobbie = self.get_object(pk)
+        listaHobbie.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class AmenidadList(APIView):
+    """
+    List all Amenidad, or create a new Amenidad.
+    """
+
+    def get(self, request, format=None):
+        amenidad = Amenidad.objects.all()
+        serializer = AmenidadSerializer(amenidad, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = AmenidadSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AmenidadDetail(APIView):
+    """
+    Retrieve, update or delete a Amenidad instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return Amenidad.objects.get(pk=pk)
+        except Amenidad.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        amenidad = self.get_object(pk)
+        serializer = AmenidadSerializer(amenidad)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        amenidad = self.get_object(pk)
+        serializer = AmenidadSerializer(amenidad, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        amenidad = self.get_object(pk)
+        amenidad.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
 
 class ListaAmenidadList(APIView):
     """

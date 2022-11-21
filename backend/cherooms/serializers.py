@@ -98,6 +98,20 @@ class HobbieSerializer(serializers.ModelSerializer):
         model = Hobbie
         fields = '__all__'
 # ---------------------------------------------------------------------------------
+class ListadohobbiesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Listadohobbies
+        fields = '__all__'
+    
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['Hobbie'] = HobbieSerializer(instance.perfil).data
+        return response
+
+class AmenidadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Amenidad
+        fields = '__all__'
 
 class ListaAmenidadSerializer(serializers.ModelSerializer):
     class Meta:
