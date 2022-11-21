@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'tpi_proy',
+        'NAME': 'tpi_data',
         'USER': 'admin',
         'PASSWORD': 'admin',
         'HOST': 'localhost',

@@ -194,7 +194,6 @@ class PerfilUser(models.Model):
 class Preferencia(models.Model):
     preferencia_id = models.AutoField(primary_key=True)
     nombre_preferencia = models.CharField(max_length=1024)
-    detalle_preferencia = models.CharField(max_length=1024)
 
     class Meta:
         db_table = 'preferencia'
