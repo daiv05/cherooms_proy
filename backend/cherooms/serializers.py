@@ -120,7 +120,7 @@ class CiudadSerializer(serializers.ModelSerializer):
 # ---------------------------------------------------------------------------------
 
 
-class ListaPreferencia(serializers.ModelSerializer):
+class ListaPreferenciaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ListaPreferencia
         fields = '__all__'
