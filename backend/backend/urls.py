@@ -67,8 +67,8 @@ urlpatterns = [
 
     #---------------------------------------------------------------------------------
     # LISTADODEHOBBIES
-    path('listadodehobbies/', views.ListadohobbiesList.as_view()),
-    path('listadodehobbies/<int:pk>/', views.ListadohobbiesDetail.as_view()),
+    path('listadodehobbies/', views.ListadoHobbiesList.as_view()),
+    path('listadodehobbies/<int:pk>/', views.ListadoHobbiesDetail.as_view()),
     #---------------------------------------------------------------------------------
     # AMENIDADES
     path('amenidades/', views.AmenidadList.as_view()),

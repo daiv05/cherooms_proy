@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/foto_<id>/<filename>
-    return 'foto_{0}/{1}'.format(instance.foto_id, filename)
+    return 'foto/{1}'.format(filename)
 def perfil_directory_path(instance,filename):
-    return 'perfil_{0}/{1}'.format(instance.perfil_id, filename)
+    return 'perfil/{1}'.format(filename)
 
 class Amenidad(models.Model):
     amenidad_id = models.AutoField(primary_key=True)
@@ -58,7 +58,7 @@ class HistorialBusqueda(models.Model):
     busqueda_id = models.AutoField(primary_key=True)
     perfil = models.ForeignKey('PerfilUser', models.DO_NOTHING, db_column='perfil_id')
     busqueda = models.CharField(max_length=1024)
-    fecha_busqueda = models.DateTimeField(default=datetime.now())
+    fecha_busqueda = models.DateTimeField()
 
     class Meta:
         db_table = 'historial_busqueda'
@@ -99,7 +99,7 @@ class ListaPreferencia(models.Model):
         db_table = 'lista_preferencia'
 
 
-class Listadohobbies(models.Model):
+class ListadoHobbies(models.Model):
     listhobbies_id = models.AutoField(primary_key=True)
     perfil = models.ForeignKey('PerfilUser', models.DO_NOTHING, db_column='perfil_id')
     hobbie = models.ForeignKey('Hobbie', models.DO_NOTHING, db_column='hobbie_id')

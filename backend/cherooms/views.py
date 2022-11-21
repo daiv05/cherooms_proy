@@ -8,8 +8,7 @@ from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from django.http import Http404
 from decimal import Decimal
-
-#para el login
+# Para el Login
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache  import never_cache
@@ -72,13 +71,8 @@ class PerfilUserDetail(APIView):
         perfil = self.get_object(pk)
         perfil.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# AMBAS CLASES CON TODOS ESOS METODOS POR CADA MODELO
-# -------------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
-
 
 class DepartamentoList(APIView):
     """
@@ -126,8 +120,6 @@ class DepartamentoDetail(APIView):
         perfil = self.get_object(pk)
         perfil.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
@@ -178,8 +170,6 @@ class HistorialBusquedaDetail(APIView):
         perfil = self.get_object(pk)
         perfil.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
@@ -232,11 +222,8 @@ class PublicacionAlquilerDetail(APIView):
         publicacionalquiler = self.get_object(pk)
         publicacionalquiler.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
-
 
 class FotoList(APIView):
     """
@@ -284,6 +271,8 @@ class FotoDetail(APIView):
         foto = self.get_object(pk)
         foto.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
 
 class CheroList(APIView):
     #permission_classes = (IsAuthenticated,)   
@@ -304,6 +293,8 @@ class CheroList(APIView):
         for chero in mis_cheros:
             lista_perfil_cheros.append(PerfilUser.objects.get(perfil_id = chero.favorito_user.perfil_id))
         return lista_perfil_cheros
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
 
 class Login(FormView):
     template_name = "login.html"
@@ -327,6 +318,7 @@ class Login(FormView):
             login(self.request,form.get_user())
             return super(Login,self).form_valid(form)
         return super().form_valid(form)
+
 #vista para logiar y authenticar a los usuarios
 class Logout(APIView):
     def get(self, request, format = None):
@@ -355,11 +347,8 @@ class UserViewSet(viewsets.GenericViewSet):
         return Response(data, status = status.HTTP_201_CREATED)
 """
 
-
-# -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
-
 
 class PaisList(APIView):
     """
@@ -407,11 +396,8 @@ class PaisDetail(APIView):
         pais = self.get_object(pk)
         pais.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
-
 
 class PreferenciaList(APIView):
     """
@@ -459,11 +445,8 @@ class PreferenciaDetail(APIView):
         preferencia = self.get_object(pk)
         preferencia.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
 # ---------------------------------------------------------------------------------
-# ----------------------------VentaAlquiler & Hobbie-----------------------------------------------------
 # ---------------------------------------------------------------------------------
-
 
 class VentaAlquilerList(APIView):
     """
@@ -511,7 +494,8 @@ class VentaAlquilerDetail(APIView):
         ventaAlquiler = self.get_object(pk)
         ventaAlquiler.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
 
 class HobbieList(APIView):
     """
@@ -559,8 +543,6 @@ class HobbieDetail(APIView):
         hobbie = self.get_object(pk)
         hobbie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
@@ -613,8 +595,6 @@ class CiudadDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------
-
 
 class ListaPreferenciaList(APIView):
     """
@@ -665,47 +645,44 @@ class ListaPreferenciaDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------
 
-# ---------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------
-class ListadohobbiesList(APIView):
+class ListadoHobbiesList(APIView):
     """
     List all Hobbie, or create a new Hobbie.
     """
 
     def get(self, request, format=None):
-        listahobbie = Listadohobbies.objects.all()
-        serializer = ListadohobbiesSerializer(listahobbie, many=True)
+        listahobbie = ListadoHobbies.objects.all()
+        serializer = ListadoHobbiesSerializer(listahobbie, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = ListadohobbiesSerializer(data=request.data)
+        serializer = ListadoHobbiesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ListadohobbiesDetail(APIView):
+class ListadoHobbiesDetail(APIView):
     """
     Retrieve, update or delete a ListaHobbie instance.
     """
 
     def get_object(self, pk):
         try:
-            return Listadohobbies.objects.get(pk=pk)
-        except Listadohobbies.DoesNotExist:
+            return ListadoHobbies.objects.get(pk=pk)
+        except ListadoHobbies.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
         listaHobbie = self.get_object(pk)
-        serializer = ListadohobbiesSerializer(listaHobbie)
+        serializer = ListadoHobbiesSerializer(listaHobbie)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         listaHobbie= self.get_object(pk)
-        serializer = ListadohobbiesSerializer(listaHobbie, data=request.data)
+        serializer = ListadoHobbiesSerializer(listaHobbie, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -715,7 +692,8 @@ class ListadohobbiesDetail(APIView):
         listaHobbie = self.get_object(pk)
         listaHobbie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
 
 class AmenidadList(APIView):
     """
@@ -763,8 +741,6 @@ class AmenidadDetail(APIView):
         amenidad = self.get_object(pk)
         amenidad.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
@@ -784,7 +760,6 @@ class ListaAmenidadList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class ListaAmenidadDetail(APIView):
     """
@@ -814,8 +789,6 @@ class ListaAmenidadDetail(APIView):
         listaAmenidad = self.get_object(pk)
         listaAmenidad.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
@@ -865,7 +838,5 @@ class ListaFotosDetail(APIView):
         listaFotos = self.get_object(pk)
         listaFotos.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-# ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
