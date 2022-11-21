@@ -10,6 +10,8 @@ from decimal import Decimal
 
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
+
+
 class PerfilUserList(APIView):
     """
     List all PerfilUser, or create a new PerfilUser.
@@ -62,6 +64,8 @@ class PerfilUserDetail(APIView):
 # -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
+
+
 class DepartamentoList(APIView):
     """
     List all Departamentos, or create a new Departamento.
@@ -78,6 +82,7 @@ class DepartamentoList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class DepartamentoDetail(APIView):
     """
@@ -112,6 +117,7 @@ class DepartamentoDetail(APIView):
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
+
 class HistorialBusquedaList(APIView):
     """
     List all HistorialBusqueda, or create a new HistorialBusqueda.
@@ -128,6 +134,7 @@ class HistorialBusquedaList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class HistorialBusquedaDetail(APIView):
     """
@@ -162,6 +169,7 @@ class HistorialBusquedaDetail(APIView):
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
+
 class PublicacionAlquilerList(APIView):
     """
     List all PublicacionAlquiler, or create a new PublicacionAlquiler.
@@ -169,7 +177,8 @@ class PublicacionAlquilerList(APIView):
 
     def get(self, request, format=None):
         publicacionalquiler = PublicacionAlquiler.objects.all()
-        serializer = PublicacionAlquilerSerializer(publicacionalquiler, many=True)
+        serializer = PublicacionAlquilerSerializer(
+            publicacionalquiler, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -198,7 +207,8 @@ class PublicacionAlquilerDetail(APIView):
 
     def put(self, request, pk, format=None):
         publicacionalquiler = self.get_object(pk)
-        serializer = HistorialBusquedaSerializer(publicacionalquiler, data=request.data)
+        serializer = HistorialBusquedaSerializer(
+            publicacionalquiler, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -207,11 +217,12 @@ class PublicacionAlquilerDetail(APIView):
     def delete(self, request, pk, format=None):
         publicacionalquiler = self.get_object(pk)
         publicacionalquiler.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)       
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # -------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
+
 
 class FotoList(APIView):
     """
@@ -264,6 +275,7 @@ class FotoDetail(APIView):
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
+
 class PaisList(APIView):
     """
     List all Pais, or create a new Pais.
@@ -280,6 +292,7 @@ class PaisList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class PaisDetail(APIView):
     """
@@ -314,6 +327,7 @@ class PaisDetail(APIView):
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
+
 class PreferenciaList(APIView):
     """
     List all Preferencia, or create a new Pais.
@@ -330,6 +344,7 @@ class PreferenciaList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class PreferenciaDetail(APIView):
     """
@@ -363,6 +378,8 @@ class PreferenciaDetail(APIView):
 # ---------------------------------------------------------------------------------
 # ----------------------------VentaAlquiler & Hobbie-----------------------------------------------------
 # ---------------------------------------------------------------------------------
+
+
 class VentaAlquilerList(APIView):
     """
     List all PerfilUser, or create a new PerfilUser.
@@ -458,4 +475,109 @@ class HobbieDetail(APIView):
         hobbie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+
+class CiudadList(APIView):
+    """
+    List all Ciudad, or create a new Ciudad.
+    """
+
+    def get(self, request, format=None):
+        ciudad = Ciudad.objects.all()
+        serializer = CiudadSerializer(ciudad, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = CiudadSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CiudadDetail(APIView):
+    """
+    Retrieve, update or delete a ciudad instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return Ciudad.objects.get(pk=pk)
+        except Ciudad.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        ciudad = self.get_object(pk)
+        serializer = CiudadSerializer(ciudad)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        ciudad = self.get_object(pk)
+        serializer = CiudadSerializer(ciudad, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        ciudad = self.get_object(pk)
+        ciudad.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+
+class ListaPreferenciaList(APIView):
+    """
+    List all listado de preferencias, or create a new Listado.
+    """
+
+    def get(self, request, format=None):
+        listaPreferencia = ListaPreferencia.objects.all()
+        serializer = ListaPreferencia(listaPreferencia, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = ListaPreferenciaSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ListaPreferenciaDetail(APIView):
+    """
+    Retrieve, update or delete a listadePreferncia instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return ListaPreferencia.objects.get(pk=pk)
+        except ListaPreferencia.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        listaPreferencia = self.get_object(pk)
+        serializer = ListaPreferenciaSerializer(listaPreferencia)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        listaPreferencia = self.get_object(pk)
+        serializer = ListaPreferenciaSerializer(
+            listaPreferencia, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        listaPreferencia = self.get_object(pk)
+        listaPreferencia.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
