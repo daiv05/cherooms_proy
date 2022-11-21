@@ -623,7 +623,7 @@ class ListaPreferenciaList(APIView):
 
     def get(self, request, format=None):
         listaPreferencia = ListaPreferencia.objects.all()
-        serializer = ListaPreferencia(listaPreferencia, many=True)
+        serializer = ListaPreferenciaSerializer(listaPreferencia, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
