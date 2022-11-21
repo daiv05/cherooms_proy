@@ -31,7 +31,7 @@ class Cheros(models.Model):
 class Ciudad(models.Model):
     ciudad_id = models.AutoField(primary_key=True)
     departamento = models.ForeignKey('Departamento', models.DO_NOTHING, db_column='departamento_id')
-    nombre_ciudad = models.CharField(max_length=1024)
+    nombre_ciudad = models.CharField(max_length=100)
 
     class Meta:
         db_table = 'ciudad'
@@ -194,6 +194,7 @@ class PerfilUser(models.Model):
 class Preferencia(models.Model):
     preferencia_id = models.AutoField(primary_key=True)
     nombre_preferencia = models.CharField(max_length=1024)
+    detalle_preferencia = models.CharField(max_length=1024)
 
     class Meta:
         db_table = 'preferencia'
