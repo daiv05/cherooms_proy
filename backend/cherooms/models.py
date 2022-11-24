@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/foto_<id>/<filename>
-    return 'foto/{1}'.format(filename)
+    return 'foto/{0}'.format(filename)
 def perfil_directory_path(instance,filename):
-    return 'perfil/{1}'.format(filename)
+    return 'perfil/{0}'.format(filename)
 
 class Amenidad(models.Model):
     amenidad_id = models.AutoField(primary_key=True)
@@ -14,6 +14,9 @@ class Amenidad(models.Model):
 
     class Meta:
         db_table = 'amenidad'
+    
+    def __str__(self) :
+        return self.nombre_amenidad
 
 
 class Cheros(models.Model):
@@ -35,6 +38,9 @@ class Ciudad(models.Model):
 
     class Meta:
         db_table = 'ciudad'
+    
+    def __str__(self) :
+        return self.nombre_ciudad
 
 
 class Departamento(models.Model):
@@ -44,6 +50,9 @@ class Departamento(models.Model):
 
     class Meta:
         db_table = 'departamento'
+    
+    def __str__(self) :
+        return self.nombre_depa
 
 
 class Foto(models.Model):
@@ -52,7 +61,6 @@ class Foto(models.Model):
 
     class Meta:
         db_table = 'foto'
-
 
 class HistorialBusqueda(models.Model):
     busqueda_id = models.AutoField(primary_key=True)
@@ -63,6 +71,8 @@ class HistorialBusqueda(models.Model):
     class Meta:
         db_table = 'historial_busqueda'
 
+    def __str__(self) :
+        return self.busqueda + " " + self.fecha_busqueda.__str__()
 
 class Hobbie(models.Model):
     hobbie_id = models.AutoField(primary_key=True)
@@ -71,6 +81,8 @@ class Hobbie(models.Model):
     class Meta:
         db_table = 'hobbie'
 
+    def __str__(self) :
+        return self.nombre_hobbie
 
 class ListaAmenidad(models.Model):
     listamenidad_id = models.AutoField(primary_key=True)
@@ -80,6 +92,8 @@ class ListaAmenidad(models.Model):
     class Meta:
         db_table = 'lista_amenidad'
 
+    def __str__(self) :
+        return self.amenidad.__str__()
 
 class ListaFotos(models.Model):
     listafoto_id = models.AutoField(primary_key=True)
@@ -89,6 +103,8 @@ class ListaFotos(models.Model):
     class Meta:
         db_table = 'lista_fotos'
 
+    def __str__(self) :
+        return self.publicacion.__str__()
 
 class ListaPreferencia(models.Model):
     listapref_id = models.AutoField(primary_key=True)
@@ -98,6 +114,8 @@ class ListaPreferencia(models.Model):
     class Meta:
         db_table = 'lista_preferencia'
 
+    def __str__(self) :
+        return self.perfil.__str__() + " " + self.preferencia.__str__()
 
 class ListadoHobbies(models.Model):
     listhobbies_id = models.AutoField(primary_key=True)
@@ -107,6 +125,8 @@ class ListadoHobbies(models.Model):
     class Meta:
         db_table = 'listadohobbies'
 
+    def __str__(self) :
+        return self.perfil.__str__() + " " + self.hobbie.__str__()
 
 class Pais(models.Model):
     pais_id = models.AutoField(primary_key=True)
@@ -114,6 +134,10 @@ class Pais(models.Model):
 
     class Meta:
         db_table = 'pais'
+
+    def __str__(self) :
+        return self.nombre_pais
+    
 """
 class UsuarioManager(BaseUserManager):
     def create_user(self,email,username,nombre_user,apellidos_user,password = None,genero='Masculino'):
@@ -175,7 +199,7 @@ class PerfilUser(models.Model):
         db_table = 'perfil_user'
     
     def __str__(self):
-        return self.nombre_user
+        return self.nombre_user + " " + self.apellidos_user
     """
     #para los permisos de poder ver el admin
     def has_perm(self,perm,obj = None):
@@ -199,6 +223,8 @@ class Preferencia(models.Model):
     class Meta:
         db_table = 'preferencia'
 
+    def __str__(self) :
+        return self.nombre_preferencia
 
 class PublicacionAlquiler(models.Model):
     publicacion_id = models.AutoField(primary_key=True)
@@ -215,6 +241,8 @@ class PublicacionAlquiler(models.Model):
     class Meta:
         db_table = 'publicacion_alquiler'
 
+    def __str__(self) :
+        return self.titulo + " " + self.perfil.__str__()
 
 class VentaAlquiler(models.Model):
     venta_id = models.AutoField(primary_key=True)
@@ -226,3 +254,5 @@ class VentaAlquiler(models.Model):
     class Meta:
         db_table = 'venta_alquiler'
 
+    def __str__(self) :
+        return self.perfil.__str__() + " " + self.publicacion.__str__()
