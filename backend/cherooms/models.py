@@ -58,6 +58,7 @@ class Departamento(models.Model):
 class Foto(models.Model):
     foto_id = models.AutoField(primary_key=True)
     foto_lugar = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    publi_alquiler = models.ForeignKey('PublicacionAlquiler', models.DO_NOTHING, db_column='publicacion_id', blank=True, null=True)
 
     class Meta:
         db_table = 'foto'
@@ -94,17 +95,6 @@ class ListaAmenidad(models.Model):
 
     def __str__(self) :
         return self.amenidad.__str__()
-
-class ListaFotos(models.Model):
-    listafoto_id = models.AutoField(primary_key=True)
-    publicacion = models.ForeignKey('PublicacionAlquiler', models.DO_NOTHING, db_column='publicacion_id')
-    foto = models.ForeignKey('Foto', models.DO_NOTHING, db_column='foto_id')
-
-    class Meta:
-        db_table = 'lista_fotos'
-
-    def __str__(self) :
-        return self.publicacion.__str__()
 
 class ListaPreferencia(models.Model):
     listapref_id = models.AutoField(primary_key=True)
@@ -218,7 +208,6 @@ class PerfilUser(models.Model):
 class Preferencia(models.Model):
     preferencia_id = models.AutoField(primary_key=True)
     nombre_preferencia = models.CharField(max_length=1024)
-    detalle_preferencia = models.CharField(max_length=1024)
 
     class Meta:
         db_table = 'preferencia'

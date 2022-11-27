@@ -77,9 +77,6 @@ urlpatterns = [
     path('lista_amenidad/', views.ListaAmenidadList.as_view()),
     path('lista_amenidad/<int:pk>/', views.ListaAmenidadDetail.as_view()),
     #---------------------------------------------------------------------------------
-    # ListaFotos
-    path('lista_fotos/', views.ListaFotosList.as_view()),
-    path('lista_fotos/<int:pk>/', views.ListaFotosDetail.as_view()),
 
     #login
     path('login/',Login.as_view(),name="login"),

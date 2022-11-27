@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from .models import *
+from django import forms
 
 
 class RelatedFieldAlternative(serializers.PrimaryKeyRelatedField):
@@ -214,19 +215,6 @@ class ListaAmenidadSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response['perfil'] = PerfilUserSerializer(instance.perfil).data
         response['amenidad'] = HobbieSerializer(instance.amenidad).data
-        return response
-# ---------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------
-
-class ListaFotosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ListaFotos
-        fields = '__all__'
-    
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response['publicacion'] = PublicacionAlquilerSerializer(instance.publicacion).data
-        response['foto'] = FotoSerializer(instance.foto).data
         return response
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
