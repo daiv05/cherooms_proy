@@ -20,6 +20,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
@@ -325,6 +327,7 @@ class Logout(APIView):
         request.user.auth_token.delete()
         logout(request)
         return Response(status=status.HTTP_200_OK)
+
 def index(request):
     return render(request,"index.html")
 
@@ -840,3 +843,33 @@ class ListaFotosDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
+# clase para authenticar desde vue
+class CustomAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data = request.data,
+            context = {'request' : request}
+        )
+        if serializer.is_valid():
+            user = serializer.validated_data["user"] 
+            token,created = Token.objects.get_or_create(user = user)
+            user_serializer = UserTokenSerializer(user)
+            if created:
+                print(request.user)
+                return Response({
+                    'token': token.key,
+                    'user': user_serializer.data,
+                    'message' : "Inicio de sesión exitoso"
+                }, status = status.HTTP_201_CREATED)
+            else:
+                token.delete()
+                token = Token.objects.create(user = user)
+                return Response({
+                    'token': token.key,
+                    'user': user_serializer.data,
+                    'message' : "Inicio de sesión exitoso"
+                }, status = status.HTTP_201_CREATED)
+        else:
+            return Response({'error':'Nombre de usuario o contraseña incorrecto'},
+                            status = status.HTTP_400_BAD_REQUEST)
+#class para logout desde vue

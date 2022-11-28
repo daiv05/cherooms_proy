@@ -9,7 +9,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views as views_token
 
-#router = DefaultRouter()
+router = DefaultRouter()
 #router.register(r'users', UserViewSet, basename='users')
 app_name = "api"
 
@@ -89,10 +89,11 @@ urlpatterns = [
     #lista de cheros por usuario
     path('chero_list/',views.CheroList.as_view(),name="chero-list"),
     path('logout/',views.Logout.as_view(),name="logout"),
-
+    #paths para el login y authenticacion con vue y dajngo
+    path('login-api/',views.CustomAuthToken.as_view())
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = format_suffix_patterns(urlpatterns,False)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
