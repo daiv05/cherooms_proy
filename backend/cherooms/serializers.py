@@ -108,7 +108,7 @@ class UserModelSerializer(serializers.ModelSerializer):
 
 class UserLoginSerializer(serializers.Serializer):
     #campos requeridos para hacer le login
-    username = serializers.EmailField()
+    username = serializers.CharField(min_length=8, max_length=64)
     password = serializers.CharField(min_length=8, max_length=64)
 
     #validacion de los datos
@@ -218,3 +218,7 @@ class ListaAmenidadSerializer(serializers.ModelSerializer):
         return response
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
+class UserTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username','email')
