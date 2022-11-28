@@ -213,8 +213,8 @@ class ListaAmenidadSerializer(serializers.ModelSerializer):
     
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        response['perfil'] = PerfilUserSerializer(instance.perfil).data
-        response['amenidad'] = HobbieSerializer(instance.amenidad).data
+        response['publicacion'] = PublicacionAlquilerSerializer(instance.publicacion).data
+        response['amenidad'] = AmenidadSerializer(instance.amenidad).data
         return response
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------

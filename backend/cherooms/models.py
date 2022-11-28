@@ -21,8 +21,8 @@ class Amenidad(models.Model):
 
 class Cheros(models.Model):
     cheros_id = models.AutoField(primary_key=True)
-    perfil_user = models.ForeignKey('PerfilUser', models.DO_NOTHING, related_name='perfil')
-    favorito_user = models.ForeignKey('PerfilUser', models.DO_NOTHING, related_name='favorito')
+    perfil_user = models.ForeignKey('PerfilUser', on_delete=models.CASCADE, related_name='perfil')
+    favorito_user = models.ForeignKey('PerfilUser', on_delete=models.CASCADE, related_name='favorito')
     
     class Meta:
         db_table = 'cheros'
@@ -33,7 +33,7 @@ class Cheros(models.Model):
 
 class Ciudad(models.Model):
     ciudad_id = models.AutoField(primary_key=True)
-    departamento = models.ForeignKey('Departamento', models.DO_NOTHING, db_column='departamento_id')
+    departamento = models.ForeignKey('Departamento', on_delete=models.CASCADE, db_column='departamento_id')
     nombre_ciudad = models.CharField(max_length=100)
 
     class Meta:
@@ -45,7 +45,7 @@ class Ciudad(models.Model):
 
 class Departamento(models.Model):
     departamento_id = models.AutoField(primary_key=True)
-    pais = models.ForeignKey('Pais', models.DO_NOTHING, db_column='pais_id')
+    pais = models.ForeignKey('Pais', on_delete=models.CASCADE, db_column='pais_id')
     nombre_depa = models.CharField(max_length=1024)
 
     class Meta:
@@ -58,14 +58,14 @@ class Departamento(models.Model):
 class Foto(models.Model):
     foto_id = models.AutoField(primary_key=True)
     foto_lugar = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
-    publi_alquiler = models.ForeignKey('PublicacionAlquiler', models.DO_NOTHING, db_column='publicacion_id', blank=True, null=True)
+    publi_alquiler = models.ForeignKey('PublicacionAlquiler', on_delete=models.CASCADE, db_column='publicacion_id', blank=True, null=True)
 
     class Meta:
         db_table = 'foto'
 
 class HistorialBusqueda(models.Model):
     busqueda_id = models.AutoField(primary_key=True)
-    perfil = models.ForeignKey('PerfilUser', models.DO_NOTHING, db_column='perfil_id')
+    perfil = models.ForeignKey('PerfilUser', on_delete=models.CASCADE, db_column='perfil_id')
     busqueda = models.CharField(max_length=1024)
     fecha_busqueda = models.DateTimeField()
 
@@ -87,8 +87,8 @@ class Hobbie(models.Model):
 
 class ListaAmenidad(models.Model):
     listamenidad_id = models.AutoField(primary_key=True)
-    publicacion = models.ForeignKey('PublicacionAlquiler', models.DO_NOTHING, db_column='publicacion_id')
-    amenidad = models.ForeignKey('Amenidad', models.DO_NOTHING, db_column='amenidad_id')
+    publicacion = models.ForeignKey('PublicacionAlquiler', on_delete=models.CASCADE, db_column='publicacion_id')
+    amenidad = models.ForeignKey('Amenidad', on_delete=models.CASCADE, db_column='amenidad_id')
 
     class Meta:
         db_table = 'lista_amenidad'
@@ -98,8 +98,8 @@ class ListaAmenidad(models.Model):
 
 class ListaPreferencia(models.Model):
     listapref_id = models.AutoField(primary_key=True)
-    perfil = models.ForeignKey('PerfilUser', models.DO_NOTHING, db_column='perfil_id')
-    preferencia = models.ForeignKey('Preferencia', models.DO_NOTHING, db_column='preferencia_id')
+    perfil = models.ForeignKey('PerfilUser', on_delete=models.CASCADE, db_column='perfil_id')
+    preferencia = models.ForeignKey('Preferencia', on_delete=models.CASCADE, db_column='preferencia_id')
 
     class Meta:
         db_table = 'lista_preferencia'
@@ -109,8 +109,8 @@ class ListaPreferencia(models.Model):
 
 class ListadoHobbies(models.Model):
     listhobbies_id = models.AutoField(primary_key=True)
-    perfil = models.ForeignKey('PerfilUser', models.DO_NOTHING, db_column='perfil_id')
-    hobbie = models.ForeignKey('Hobbie', models.DO_NOTHING, db_column='hobbie_id')
+    perfil = models.ForeignKey('PerfilUser', on_delete=models.CASCADE, db_column='perfil_id')
+    hobbie = models.ForeignKey('Hobbie', on_delete=models.CASCADE, db_column='hobbie_id')
 
     class Meta:
         db_table = 'listadohobbies'
@@ -163,7 +163,7 @@ class UsuarioManager(BaseUserManager):
 
 class PerfilUser(models.Model):
     perfil_id = models.AutoField(primary_key=True)
-    ciudad = models.ForeignKey('Ciudad', models.DO_NOTHING, db_column='ciudad_id',blank= True, null=True)
+    ciudad = models.ForeignKey('Ciudad', on_delete=models.CASCADE, db_column='ciudad_id',blank= True, null=True)
     email = models.CharField(max_length=1024, unique= True)
     nombre_user = models.CharField(max_length=1024)
     apellidos_user = models.CharField(max_length=1024)
@@ -217,7 +217,7 @@ class Preferencia(models.Model):
 
 class PublicacionAlquiler(models.Model):
     publicacion_id = models.AutoField(primary_key=True)
-    perfil = models.ForeignKey('PerfilUser', models.DO_NOTHING, db_column='perfil_id')
+    perfil = models.ForeignKey('PerfilUser', on_delete=models.CASCADE, db_column='perfil_id')
     titulo = models.CharField(max_length=1024)
     descrip_lugar = models.CharField(max_length=1024)
     coordenadas = models.CharField(max_length=1024)
@@ -235,8 +235,8 @@ class PublicacionAlquiler(models.Model):
 
 class VentaAlquiler(models.Model):
     venta_id = models.AutoField(primary_key=True)
-    perfil = models.ForeignKey('PerfilUser', models.DO_NOTHING, db_column='perfil_id')
-    publicacion = models.ForeignKey('PublicacionAlquiler', models.DO_NOTHING, db_column='publicacion_id')
+    perfil = models.ForeignKey('PerfilUser', on_delete=models.CASCADE, db_column='perfil_id')
+    publicacion = models.ForeignKey('PublicacionAlquiler', on_delete=models.CASCADE, db_column='publicacion_id')
     fecha_venta = models.DateField()
     comision = models.DecimalField(max_digits=8, decimal_places=2)
 
