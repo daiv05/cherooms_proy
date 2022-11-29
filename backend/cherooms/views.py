@@ -188,6 +188,9 @@ class PublicacionAlquilerList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
+        elperfil = PerfilUser.objects.get(user=request.user.id)
+        print(elperfil.genero)
+        request.data['perfil'] = elperfil.perfil_id
         serializer = PublicacionAlquilerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
