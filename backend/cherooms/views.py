@@ -180,7 +180,7 @@ class PublicacionAlquilerList(APIView):
     """
     List all PublicacionAlquiler, or create a new PublicacionAlquiler.
     """
-
+    permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         publicacionalquiler = PublicacionAlquiler.objects.all()
         serializer = PublicacionAlquilerSerializer(
@@ -193,7 +193,6 @@ class PublicacionAlquilerList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class PublicacionAlquilerDetail(APIView):
     """
@@ -279,7 +278,7 @@ class FotoDetail(APIView):
 class CheroList(APIView):
     #permission_classes = (IsAuthenticated,)   
     #authentication_classes = (TokenAuthentication,)
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    #authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self,request, *args, **kwargs):
         id_usuario = request.user.id
@@ -324,9 +323,16 @@ class Login(FormView):
 #vista para logiar y authenticar a los usuarios
 class Logout(APIView):
     def get(self, request, format = None):
-        request.user.auth_token.delete()
-        logout(request)
-        return Response(status=status.HTTP_200_OK)
+        tempToken = request.GET.get("token", "")
+        if tempToken :
+            print("Se recupero el token desde el frontend y es {}".format(tempToken))
+            token = Token.objects.get(key = tempToken)
+            token.delete()
+            return Response(status=status.HTTP_200_OK)
+        else :
+            return Response( { "error" : "no se proporciono un token para cerrar sesión"},status = status.HTTP_404_NOT_FOUND)
+        #request.user.auth_token.delete()
+        #logout(request)
 
 def index(request):
     return render(request,"index.html")
