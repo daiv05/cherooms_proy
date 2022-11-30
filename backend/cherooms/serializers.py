@@ -1,5 +1,7 @@
 from django.contrib.auth import password_validation, authenticate
 from django.contrib.auth.models import User
+from django.core.exceptions import *
+from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from .models import *
@@ -222,3 +224,45 @@ class UserTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username','email')
+#-----------------Serializador para el registro del usuario
+class RegisterSerializer(serializers.Serializer):
+    #no hay class meta XD hay que inventar 
+    username = serializers.CharField(max_length = 200)
+    name = serializers.CharField(max_length = 200)
+    lastName = serializers.CharField(max_length =200)
+    sexo = serializers.CharField(max_length = 10)
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length = 200)
+
+    def create (self):
+        resultado = {}
+        try:
+            user = User(username = self.data["username"])
+            user.set_password(self.data['password'])
+            user.save()
+            try : 
+                perfil = PerfilUser(
+                    username = self.data["username"],
+                    user = user,
+                    nombre_user = self.data["name"],
+                    genero = self.data["sexo"],
+                    email = self.data["email"],
+                    apellidos_user = self.data["lastName"]
+                )
+                perfil.save() 
+                resultado["perfil"] = perfil
+                resultado["user"] = user
+                return resultado
+            except IntegrityError as error:
+                print("Ocurrio un error en la creacion del perfil de usuario  {}".format(error))
+                print("Clase de error: {}".format(type(error).__name__))
+                print(error.args)
+                resultado["error"] = "Ya existe un perfil registrado con el correo {}".format(self.data["email"])
+                return resultado
+        except IntegrityError as error:
+            print ("Ocurrio un error en la creacion del usuario : {} ".format(error))
+            print("Clase de error : {}" .format(type(error).__name__))
+            resultado["error"] = "Ya existe el usuario :{}. Intente con otro nombre de usuario".format(self.data["username"])
+            return resultado
+
+        
