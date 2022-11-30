@@ -181,6 +181,7 @@ class PublicacionAlquilerList(APIView):
     List all PublicacionAlquiler, or create a new PublicacionAlquiler.
     """
     permission_classes = [IsAuthenticated]
+    
     def get(self, request, format=None):
         publicacionalquiler = PublicacionAlquiler.objects.all()
         serializer = PublicacionAlquilerSerializer(
