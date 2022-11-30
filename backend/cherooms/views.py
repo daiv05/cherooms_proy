@@ -219,13 +219,13 @@ class PublicacionAlquilerDetail(APIView):
 
     def get(self, request, pk, format=None):
         publicacionalquiler = self.get_object(pk)
-        serializer = HistorialBusquedaSerializer(publicacionalquiler)
+        serializer = PublicacionAlquilerSerializer(publicacionalquiler)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
         publicacionalquiler = self.get_object(pk)
-        serializer = HistorialBusquedaSerializer(
-            publicacionalquiler, data=request.data)
+        serializer = PublicacionAlquilerSerializer(
+            publicacionalquiler, data=request.data, partial = True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -274,7 +274,7 @@ class FotoDetail(APIView):
 
     def put(self, request, pk, format=None):
         foto = self.get_object(pk)
-        serializer = FotoSerializer(foto, data=request.data)
+        serializer = FotoSerializer(foto, data=request.data, partial = True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
