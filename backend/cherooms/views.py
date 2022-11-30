@@ -856,6 +856,8 @@ class CustomAuthToken(ObtainAuthToken):
             data = request.data,
             context = {'request' : request}
         )
+        serializer.is_valid()
+        print(serializer.errors)
         if serializer.is_valid():
             user = serializer.validated_data["user"] 
             token,created = Token.objects.get_or_create(user = user)
@@ -879,3 +881,17 @@ class CustomAuthToken(ObtainAuthToken):
             return Response({'error':'Nombre de usuario o contraseña incorrecto'},
                             status = status.HTTP_400_BAD_REQUEST)
 #class para logout desde vue
+class UserRegisterView(APIView):
+    def post(self, request, *args, **kwargs):
+        datos_registro = RegisterSerializer(
+            data = request.data,
+            context = {'request' : request}
+        )
+        if datos_registro.is_valid():
+            resultado = datos_registro.create()
+            if resultado.get("error","")!= "":
+                return Response({'error':resultado["error"]},status = status.HTTP_400_BAD_REQUEST)
+            if resultado["user"] and resultado["perfil"]:
+                return Response({"mensaje":"se creo el usuario y su perfil"}, status = status.HTTP_200_OK)
+        else :
+            return Response({"error" : "Los datos que envio no son validos"},status = status.HTTP_400_BAD_REQUEST)
