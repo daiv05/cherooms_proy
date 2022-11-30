@@ -175,6 +175,15 @@ class HistorialBusquedaDetail(APIView):
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
+class UserToken(APIView):
+    """
+    Retrieve, update or delete a PerfilUser instance.
+    """
+    def get(self, request, format=None):
+        elperfil = PerfilUser.objects.get(user=request.user.id)
+        serializer = PerfilUserSerializer(elperfil)
+        return Response(serializer.data)
+
 
 class PublicacionAlquilerList(APIView):
     """
