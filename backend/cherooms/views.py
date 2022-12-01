@@ -184,6 +184,12 @@ class UserToken(APIView):
         serializer = PerfilUserSerializer(elperfil)
         return Response(serializer.data)
 
+class CustomObtainAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        user_id = Token.objects.get(key=request.data.get('token')).user_id
+        user = User.objects.get(id=user_id)
+        return Response({'token': user.id})
+
 
 class PublicacionAlquilerList(APIView):
     """
