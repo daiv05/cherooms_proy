@@ -18,6 +18,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['.cheroomsv.com', 'localhost', '20.94.77.181']
 
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # Application definition
 
