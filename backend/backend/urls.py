@@ -21,6 +21,7 @@ urlpatterns = [
     # PERFIL
     path('perfil/', views.PerfilUserList.as_view(),name="perfil"),
     path('perfil/<int:pk>/', views.PerfilUserDetail.as_view()),
+    path('perfil_user/<int:pk>/', views.PerfilDetail.as_view()),
     # ---------------------------------------------------------------------------------
     # DEPARTAMENTOS
     path('departamento/', views.DepartamentoList.as_view()),

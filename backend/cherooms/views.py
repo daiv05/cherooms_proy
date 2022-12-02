@@ -76,6 +76,24 @@ class PerfilUserDetail(APIView):
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
 
+class PerfilDetail(APIView):
+    """
+    Retrieve, update or delete a PerfilUser instance.
+    """
+
+    def get_object(self, pk):
+        try:
+            return PerfilUser.objects.get(pk=pk)
+        except PerfilUser.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        perfil = PerfilUser.objects.get(user__exact=pk)
+        serializer = PerfilUserSerializer(perfil)
+        return Response(serializer.data)
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
 class DepartamentoList(APIView):
     """
     List all Departamentos, or create a new Departamento.
