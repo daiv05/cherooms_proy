@@ -16,7 +16,7 @@ SECRET_KEY = 'django-insecure-8txbsht*837=(i7snxnfl32d%8^rgu@$v(rs!g_w1tcds9)7y!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.cheroomsv.com', 'localhost', '20.94.77.181']
+ALLOWED_HOSTS = ['http://localhost', 'https://cheroomsv.com', 'http://cheroomsv.com', 'https://www.cheroomsv.com', 'http://www.cheroomsv.com', 'http://20.94.77.181/', 'https://20.94.77.181/']
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
@@ -121,12 +121,21 @@ AUTH_PASSWORD_VALIDATORS = [
 # White listing the localhost:8080 port
 # for Vue.js development server
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8080'
+    'http://localhost:8080',
+    'https://cheroomsv.com',
+    'http://cheroomsv.com',
+    'https://www.cheroomsv.com',
+    'http://www.cheroomsv.com',
 ]
 
 CORS_ALLOW_HEADERS = list(default_headers) + ['content_type']
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    'cheroomsv.com',
+    'www.cheroomsv.com',
+]
+CSRF_COOKIE_DOMAIN = '.cheroomsv.com'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -143,7 +152,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = 'staticfiles/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
 
