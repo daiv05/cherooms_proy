@@ -865,3 +865,7 @@ class UserRegisterView(APIView):
                 return Response({"mensaje":"se creo el usuario y su perfil"}, status = status.HTTP_200_OK)
         else :
             return Response({"error" : "Los datos que envio no son validos"},status = status.HTTP_400_BAD_REQUEST)
+
+def error_404(request, exception):
+   context = {}
+   return render(request,'404.html', context)

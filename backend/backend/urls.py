@@ -8,11 +8,12 @@ from cherooms.views import *
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views as views_token
+from django.conf import urls
 
 router = DefaultRouter()
 #router.register(r'users', UserViewSet, basename='users')
 app_name = "api"
-
+urls.handler404 = views.error_404
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
@@ -97,7 +98,10 @@ urlpatterns = [
 
     #Para obtener el user asocido a un token
     path('user_token_admin/',views.CustomObtainAuthToken.as_view()),
+    
 ]
+
+
 
 urlpatterns = format_suffix_patterns(urlpatterns,False)
 
