@@ -14,9 +14,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8txbsht*837=(i7snxnfl32d%8^rgu@$v(rs!g_w1tcds9)7y!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['http://localhost', 'https://cheroomsv.com', 'http://cheroomsv.com', 'https://www.cheroomsv.com', 'http://www.cheroomsv.com', 'http://20.94.77.181/', 'https://20.94.77.181/']
+ALLOWED_HOSTS = ['127.0.0.1', '.localhost', '.cheroomsv.com', '.www.cheroomsv.com', '20.94.77.181']
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
@@ -131,11 +131,6 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ALLOW_HEADERS = list(default_headers) + ['content_type']
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
-    'cheroomsv.com',
-    'www.cheroomsv.com',
-]
-CSRF_COOKIE_DOMAIN = '.cheroomsv.com'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
