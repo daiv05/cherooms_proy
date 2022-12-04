@@ -78,6 +78,9 @@ class PerfilUserDetail(APIView):
 
     def get(self, request, pk, format=None):
         perfil = self.get_object(pk)
+        if perfil.foto_perfil:
+            foto = base64.b64encode(perfil.foto_perfil.file.read())
+            perfil.foto64 = 'data:image/jpeg;base64,' + foto.decode('utf-8')
         serializer = PerfilUserSerializer(perfil)
         return Response(serializer.data)
 
@@ -261,6 +264,10 @@ class FotoList(APIView):
 
     def get(self, request, format=None):
         foto = Foto.objects.all()
+        for p in foto:
+            if p.foto_lugar:
+                fotoss = base64.b64encode(p.foto_lugar.file.read())
+                p.foto64 = 'data:image/jpeg;base64,' + fotoss.decode('utf-8')
         serializer = FotoSerializer(foto, many=True)
         return Response(serializer.data)
 
@@ -285,6 +292,9 @@ class FotoDetail(APIView):
 
     def get(self, request, pk, format=None):
         foto = self.get_object(pk)
+        if foto.foto_lugar:
+                fotoss = base64.b64encode(foto.foto_lugar.file.read())
+                foto.foto64 = 'data:image/jpeg;base64,' + fotoss.decode('utf-8')
         serializer = FotoSerializer(foto)
         return Response(serializer.data)
 
