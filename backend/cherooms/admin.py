@@ -2,7 +2,9 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import *
+from django.contrib.sessions.models import Session
 
+admin.site.register(Session)
 admin.site.register(PerfilUser)
 admin.site.register(PublicacionAlquiler)
 admin.site.register(Foto)

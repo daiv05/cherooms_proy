@@ -89,7 +89,9 @@ urlpatterns = [
     #paths para el login y authenticacion con vue y dajngo
     path('login-api/',views.CustomAuthToken.as_view()),
     #url para el registro de un usuario
-    path('register/',views.UserRegisterView.as_view())
+    path('register/',views.UserRegisterView.as_view()),
+    #url para vista usuario
+    path('obtener_usuario/',views.VistaUsuarioLogueado.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns,False)
