@@ -22,18 +22,38 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+import base64, os
+
 
 # ---------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
+
+class UserToken(APIView):
+    """
+    Retrieve, update or delete a PerfilUser instance.
+    """
+    def get(self, request, format=None):
+        elperfil = PerfilUser.objects.get(user=request.user.id)
+        if elperfil.foto_perfil:
+                foto = base64.b64encode(elperfil.foto_perfil.file.read())
+                elperfil.foto64 = 'data:image/jpeg;base64,' + foto.decode('utf-8')
+        serializer = PerfilUserSerializer(elperfil)
+        return Response(serializer.data)
 
 
 class PerfilUserList(APIView):
     """
     List all PerfilUser, or create a new PerfilUser.
     """
-
     def get(self, request, format=None):
         perfil = PerfilUser.objects.all()
+        for p in perfil:
+            if p.foto_perfil:
+                foto = base64.b64encode(p.foto_perfil.file.read())
+                p.foto64 = 'data:image/jpeg;base64,' + foto.decode('utf-8')
         serializer = PerfilUserSerializer(perfil, many=True)
         return Response(serializer.data)
 
@@ -172,17 +192,7 @@ class HistorialBusquedaDetail(APIView):
         perfil = self.get_object(pk)
         perfil.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-# ---------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------
 
-class UserToken(APIView):
-    """
-    Retrieve, update or delete a PerfilUser instance.
-    """
-    def get(self, request, format=None):
-        elperfil = PerfilUser.objects.get(user=request.user.id)
-        serializer = PerfilUserSerializer(elperfil)
-        return Response(serializer.data)
 
 class CustomObtainAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
