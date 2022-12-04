@@ -97,6 +97,9 @@ urlpatterns = [
 
     #Para obtener el user asocido a un token
     path('user_token_admin/',views.CustomObtainAuthToken.as_view()),
+
+    #Para obtener la publicacion 
+    path('publicacion/<int:pk>/', views.AlquilerView.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns,False)

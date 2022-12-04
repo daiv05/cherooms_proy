@@ -865,3 +865,38 @@ class UserRegisterView(APIView):
                 return Response({"mensaje":"se creo el usuario y su perfil"}, status = status.HTTP_200_OK)
         else :
             return Response({"error" : "Los datos que envio no son validos"},status = status.HTTP_400_BAD_REQUEST)
+
+class AlquilerView (APIView):
+  def get(self, request, pk, format=None):    
+        id_publicacion = self.get_object(pk)
+
+        if id_publicacion:
+            publicacion=PublicacionAlquiler.objects.get(publcacion_id=id_publicacion)
+
+            if publicacion:
+                id_perfil = publicacion.perfil
+                perfilUser=PerfilUser.objects.get(perfil_id=id_perfil)
+                ciudadUser=Ciudad.objects.get(ciudad_id=perfilUser.ciudad)
+                departamento=Departamento.objects.get(departamento_id=ciudadUser.departamento)
+                lista_amenidad=ListaAmenidad.objects.filter(publicacion=publicacion.publicacion_id)
+                foto=Foto.objects.get(publi_alquiler=publicacion.publicacion_id)
+
+                serializer_publicacion=PublicacionAlquilerSerializer(publicacion)
+                serializer_perfilUser=PerfilUserSerializer(perfilUser)
+                serializer_ciudadUser=CiudadSerializer(ciudadUser)
+                serializer_departamento=DepartamentoSerializer(departamento)
+                serializer_listaAmenidad=ListaAmenidadSerializer(lista_amenidad)
+                serializer_foto=FotoSerializer(foto)
+
+        return Response(
+            {
+                'publicacion': serializer_publicacion,
+                'perfil':serializer_perfilUser,
+                'ciudad':serializer_ciudadUser,
+                'departamento':serializer_departamento,
+                'amenidades':serializer_listaAmenidad,
+                'foto':serializer_foto
+
+            },
+            status=status.HTTP_200_OK)
+
