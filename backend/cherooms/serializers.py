@@ -231,8 +231,10 @@ class RegisterSerializer(serializers.Serializer):
     name = serializers.CharField(max_length = 200)
     lastName = serializers.CharField(max_length =200)
     sexo = serializers.CharField(max_length = 10)
+    ciudad =serializers.IntegerField()
     email = serializers.EmailField()
     password = serializers.CharField(max_length = 200)
+    necesita_cuarto = serializers.BooleanField()
 
     def create (self):
         resultado = {}
@@ -240,6 +242,7 @@ class RegisterSerializer(serializers.Serializer):
             user = User(username = self.data["username"])
             user.set_password(self.data['password'])
             user.save()
+            ciudad = Ciudad.objects.get(ciudad_id = self.data['ciudad'])
             try : 
                 perfil = PerfilUser(
                     username = self.data["username"],
@@ -247,7 +250,9 @@ class RegisterSerializer(serializers.Serializer):
                     nombre_user = self.data["name"],
                     genero = self.data["sexo"],
                     email = self.data["email"],
-                    apellidos_user = self.data["lastName"]
+                    apellidos_user = self.data["lastName"],
+                    necesita_cuarto = self.data["necesita_cuarto"],
+                    ciudad = ciudad
                 )
                 perfil.save() 
                 resultado["perfil"] = perfil
@@ -265,4 +270,8 @@ class RegisterSerializer(serializers.Serializer):
             resultado["error"] = "Ya existe el usuario :{}. Intente con otro nombre de usuario".format(self.data["username"])
             return resultado
 
-        
+class FiltroSerializer(serializers.Serializer):
+    departamento_id = serializers.CharField(max_length = 20, required = False)
+    monto_renta = serializers.IntegerField(required = False)
+    necesidad_perfil = serializers.BooleanField(required = False)
+    param_ciudad = serializers.CharField(max_length = 1024, required = False)

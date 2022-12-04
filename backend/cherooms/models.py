@@ -59,7 +59,7 @@ class Foto(models.Model):
     foto_id = models.AutoField(primary_key=True)
     foto_lugar = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
     publi_alquiler = models.ForeignKey('PublicacionAlquiler', on_delete=models.CASCADE, db_column='publicacion_id', blank=True, null=True)
-    foto64 = models.CharField(max_length=1024, blank=True, null=True, default="")
+    foto64 = models.CharField(max_length=1000000, blank=True, null=True)
 
     class Meta:
         db_table = 'foto'
@@ -178,7 +178,8 @@ class PerfilUser(models.Model):
     foto_perfil = models.ImageField(upload_to=perfil_directory_path, blank = True, null = True)
     genero = models.CharField(max_length=1024)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    foto64 = models.CharField(max_length=1024, blank=True, null=True, default="")
+    necesita_cuarto = models.BooleanField(default = False)    
+    foto64 = models.CharField(max_length=1000000, blank=True, null=True, default="")
 
     #staff = models.BooleanField(default=False)
     #admin = models.BooleanField(default=False)

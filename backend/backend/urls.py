@@ -91,6 +91,8 @@ urlpatterns = [
     path('login-api/',views.CustomAuthToken.as_view()),
     #url para el registro de un usuario
     path('register/',views.UserRegisterView.as_view()),
+    #url para vista usuario
+    path('obtener_usuario/',views.VistaUsuarioLogueado.as_view()),
 
 
     #Para obtener el user asocido a un token
