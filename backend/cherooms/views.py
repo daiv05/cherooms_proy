@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User #es el modelo para realizar la autenticación 
+from django.contrib.sessions.models import Session
 from .models import *
 from .serializers import *
 from rest_framework.decorators import api_view,action
@@ -206,11 +207,154 @@ class PublicacionAlquilerList(APIView):
     List all PublicacionAlquiler, or create a new PublicacionAlquiler.
     """
     permission_classes = [IsAuthenticated]
+    
     def get(self, request, format=None):
-        publicacionalquiler = PublicacionAlquiler.objects.all()
-        serializer = PublicacionAlquilerSerializer(
-            publicacionalquiler, many=True)
+        es_filtro = request.GET.get("es_filtro","")
+        if es_filtro:
+            departamento_id = request.GET.get("departamento")
+            tipo_usuario = request.GET.get("tipo_usuario")
+            monto_renta = int(request.GET.get("monto_renta"))
+            ciudad = request.GET.get('ciudad')
+            print("El tipo de usuario  {}".format(tipo_usuario))
+            if ciudad!= "null":
+                print(ciudad)
+            if monto_renta > 0:
+                print(monto_renta)
+            consulta_filtro = self.obtener_consulta_filtrada(ciudad,monto_renta,tipo_usuario,departamento_id)
+            consulta_filtro = consulta_filtro.order_by('publicacion_id')
+            if consulta_filtro.exists():
+                fotos_publicacion = Foto.objects.filter(publi_alquiler__in = consulta_filtro.values_list("publicacion_id")).order_by('publi_alquiler')
+                serializer_fotos = FotoSerializer(fotos_publicacion, many  = True)
+                serializer = PublicacionAlquilerSerializer(consulta_filtro, many = True)
+                return Response({'publicaciones':serializer.data,'fotos': serializer_fotos.data}
+                                ,status = status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        elif request.GET.get('reiniciar'):
+            print("Reiniciar la consulta")
+            publicacionalquiler = PublicacionAlquiler.objects.all().order_by('publicacion_id')
+            fotos = Foto.objects.all().order_by('publi_alquiler')
+            serializer = PublicacionAlquilerSerializer(publicacionalquiler, many = True)
+            serializer_fotos = FotoSerializer(fotos, many = True)
+            return Response({'publicaciones':serializer.data,'fotos': serializer_fotos.data}
+                                ,status = status.HTTP_200_OK)
+        else:
+            publicacionalquiler = PublicacionAlquiler.objects.all()
+            serializer = PublicacionAlquilerSerializer(publicacionalquiler, many=True)
         return Response(serializer.data)
+    
+    def obtener_consulta_filtrada(self,ciudad ,monto_renta,tipo_usuario ,departamento_id):
+        query_set_response = None
+        temp_query_set = None
+        if departamento_id!="null" or tipo_usuario!="null" or ciudad!="null" or monto_renta > 0:
+            if tipo_usuario == "Necesito Cuarto":
+                tipo_usuario = True
+            elif tipo_usuario == "Tengo Cuarto":
+                tipo_usuario = False
+            else:
+                tipo_usuario = "null"
+            if departamento_id!= "null" and tipo_usuario!= "null":
+                print("departamento_id and tipo_usuario")
+                ids_ciudades = Ciudad.objects.filter(departamento = departamento_id).values_list('ciudad_id')
+                temp_query_set = PerfilUser.objects.filter(
+                    ciudad__in = list(ids_ciudades)
+                ).filter(necesita_cuarto = tipo_usuario)
+                query_set_response = temp_query_set
+            elif departamento_id!="null":
+                print("departament_id!=null")
+                ids_ciudades = Ciudad.objects.filter(departamento = departamento_id).values_list('ciudad_id')
+                print(ids_ciudades)
+                temp_query_set = PerfilUser.objects.filter(ciudad__in = list(ids_ciudades))
+                print("Perfil User: {}".format(temp_query_set))
+            elif tipo_usuario!="null":
+                print("tipo_usuario!=null")
+                print(tipo_usuario)
+                temp_query_set = PerfilUser.objects.filter(necesita_cuarto = tipo_usuario)
+                print(temp_query_set)
+            if temp_query_set:
+                if ciudad!="null" and monto_renta > 0:
+                    print("ciudad!=null and monto_renta > 0")
+                    id_ciudad = Ciudad.objects.filter(nombre_ciudad = ciudad).values_list('ciudad_id')
+                    id_ciudad = list(id_ciudad)
+                    temp_query_set = temp_query_set.filter(
+                        ciudad__in = id_ciudad
+                    )
+                    query_set_response = PublicacionAlquiler.objects.filter(
+                        perfil__in = list(temp_query_set.values_list('perfil_id'))
+                    ).filter(precio__range = (self.obtener_minimo_rango_dinero(monto_renta),monto_renta))
+                    print("la query es {}".format(query_set_response))
+                elif ciudad!="null":
+                    print("ciudad!=null")
+                    id_ciudad = Ciudad.objects.filter(nombre_ciudad = ciudad).values_list('ciudad_id')
+                    temp_query_set = temp_query_set.filter(
+                        ciudad__in = id_ciudad
+                    )
+                    query_set_response = PublicacionAlquiler.objects.filter(perfil__in = list(temp_query_set))
+                elif monto_renta > 0 :
+                    print("monto_renta > 0")
+                    if monto_renta > 2500:
+                        temp_query_set = PublicacionAlquiler.objects.filter(
+                        perfil__in = temp_query_set.values_list("perfil_id")
+                        ).filter(precio__gte = 2501)
+                    else:
+                        temp_query_set = PublicacionAlquiler.objects.filter(
+                        perfil__in = temp_query_set.values_list("perfil_id")
+                        ).filter(precio__range = (self.obtener_minimo_rango_dinero(monto_renta),monto_renta))
+                    query_set_response = temp_query_set
+                else:
+                    if departamento_id!= "null" or tipo_usuario!="null":
+                        query_set_response = PublicacionAlquiler.objects.filter(
+                            perfil__in = list(temp_query_set.values_list('perfil_id'))
+                        )
+                        print("Prueba de departament y tipo de usuario")
+                        print(query_set_response)
+                        return query_set_response
+            else:
+                if ciudad!="null" and monto_renta > 0:
+                    print("ciudad!=null and monto_renta >0")
+                    query_set_response = PublicacionAlquiler.objects.filter(
+                        perfil__in = self.obtener_usuarios_por_ciudad(ciudad)
+                    ).filter(precio__range = (self.obtener_minimo_rango_dinero(monto_renta),monto_renta))
+                elif ciudad!="null":
+                    print("ciudad! = null")
+                    query_set_response = PublicacionAlquiler.objects.filter(
+                        perfil__in = self.obtener_usuarios_por_ciudad(ciudad)
+                    )
+                    print("La respuesta de ciudad es {}:".format(query_set_response))
+                elif monto_renta > 0:
+                    print("monto_renta  > 0")
+                    query_set_response = self.obtener_consulta_monto(monto_renta)
+                    print("La respuesta del monto es: {}".format(query_set_response))
+        return query_set_response
+
+    def obtener_usuarios_por_ciudad(self,ciudad):
+        query_id_ciudad = Ciudad.objects.filter(
+            nombre_ciudad = ciudad
+        ).values_list('ciudad_id')
+        print(query_id_ciudad)
+        query_user_id_ciudad = PerfilUser.objects.filter(
+            ciudad__in = list(query_id_ciudad)
+        ).values_list('perfil_id')
+        print(query_user_id_ciudad)
+        return query_user_id_ciudad
+    
+    def obtener_consulta_monto(self,monto_renta):
+        monto_renta = int(monto_renta)
+        if monto_renta == 700:
+            query_alquiler_monto = PublicacionAlquiler.objects.filter(precio__range = (0, monto_renta))
+        elif monto_renta == 2500:
+            query_alquiler_monto = PublicacionAlquiler.objects.filter(precio__range =(701,monto_renta))
+        elif monto_renta == 10000000000:
+            query_alquiler_monto = PublicacionAlquiler.objects.filter(precio__range = (2501,monto_renta))
+        return query_alquiler_monto
+    
+    def obtener_minimo_rango_dinero(self, monto):
+        if monto == 700:
+            return 0
+        elif monto == 2500:
+            return 701
+        else:
+            return 25001
 
     def post(self, request, format=None):
         elperfil = PerfilUser.objects.get(user=request.user.id)
@@ -351,12 +495,24 @@ class Login(FormView):
 #vista para logiar y authenticar a los usuarios
 class Logout(APIView):
     def get(self, request, format = None):
+        contador = 0
         tempToken = request.GET.get("token", "")
         if tempToken :
-            print("Se recupero el token desde el frontend y es {}".format(tempToken))
             token = Token.objects.get(key = tempToken)
-            token.delete()
-            return Response(status=status.HTTP_200_OK)
+            sesiones = Session.objects.all()
+            if sesiones.exists():
+                for sesion in sesiones:
+                    sesion_data = sesion.get_decoded()
+                    print(sesion_data.get("_auth_user_id"))
+                    if token.user.id == sesion_data.get("_auth_user_id"):
+                        contador += 1
+            
+            print(contador)
+            if contador == 1:
+                token.delete()
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_200_OK)
         else :
             return Response( { "error" : "no se proporciono un token para cerrar sesión"},status = status.HTTP_404_NOT_FOUND)
         #request.user.auth_token.delete()
@@ -590,9 +746,20 @@ class CiudadList(APIView):
     """
 
     def get(self, request, format=None):
-        ciudad = Ciudad.objects.all()
-        serializer = CiudadSerializer(ciudad, many=True)
-        return Response(serializer.data)
+        nombre_ciudad = request.GET.get('nombre_ciudad',"")
+        es_filtro = request.GET.get("es_filtro","")
+        if es_filtro:
+            if nombre_ciudad :
+                filtro_ciudades = Ciudad.objects.filter(nombre_ciudad__icontains = nombre_ciudad)
+            if filtro_ciudades:
+                serializer = CiudadSerializer(filtro_ciudades,many = True)
+                return Response(serializer.data)
+            else:
+                return Response({"mensaje":"No existen coincidencias"},status = status.HTTP_404_NOT_FOUND)
+        else:
+            ciudad = Ciudad.objects.all()
+            serializer = CiudadSerializer(ciudad, many=True)
+            return Response(serializer.data)
 
     def post(self, request, format=None):
         serializer = CiudadSerializer(data=request.data)
@@ -837,21 +1004,19 @@ class CustomAuthToken(ObtainAuthToken):
             context = {'request' : request}
         )
         serializer.is_valid()
-        print(serializer.errors)
         if serializer.is_valid():
             user = serializer.validated_data["user"] 
             token,created = Token.objects.get_or_create(user = user)
             user_serializer = UserTokenSerializer(user)
             if created:
-                print(request.user)
                 return Response({
                     'token': token.key,
                     'user': user_serializer.data,
                     'message' : "Inicio de sesión exitoso"
                 }, status = status.HTTP_201_CREATED)
             else:
-                token.delete()
-                token = Token.objects.create(user = user)
+                #token.delete()
+                #token = Token.objects.create(user = user)
                 return Response({
                     'token': token.key,
                     'user': user_serializer.data,
@@ -860,6 +1025,19 @@ class CustomAuthToken(ObtainAuthToken):
         else:
             return Response({'error':'Nombre de usuario o contraseña incorrecto'},
                             status = status.HTTP_400_BAD_REQUEST)
+
+class VistaUsuarioLogueado(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self,request,*args, **kwargs):
+        token = request.GET.get("token")
+        if token:
+            token = Token.objects.get(key = token)
+            return Response({
+                    'token': token.key,
+                }, status = status.HTTP_200_OK)
+            
+        return Response(status = status.HTTP_200_OK)
+
 #class para logout desde vue
 class UserRegisterView(APIView):
     def post(self, request, *args, **kwargs):
@@ -875,3 +1053,37 @@ class UserRegisterView(APIView):
                 return Response({"mensaje":"se creo el usuario y su perfil"}, status = status.HTTP_200_OK)
         else :
             return Response({"error" : "Los datos que envio no son validos"},status = status.HTTP_400_BAD_REQUEST)
+
+class VistaPerfilAlquiler(APIView):
+    def get(self,request,pk, format = None):
+        id_publicacion = pk
+        if id_publicacion:
+            publicacion = PublicacionAlquiler.objects.get(publicacion_id = id_publicacion)
+            if publicacion:
+                perfil_id = publicacion.perfil_id
+                perfilUser = PerfilUser.objects.get(perfil_id = perfil_id)
+                #ciudad_user = Ciudad.objects.get(ciudad_id = perfilUser.ciudad)
+                #departameto = Departamento.objects.get(departamento_id = ciudad_user.departamento)
+                lista_amenidades = ListaAmenidad.objects.filter(publicacion = publicacion.publicacion_id)
+                foto = Foto.objects.get(publi_alquiler = publicacion.publicacion_id)
+
+                serializer_publicacion = PublicacionAlquilerSerializer(publicacion)
+                serializer_perfil = PerfilUserSerializer(perfilUser)
+                serializer_amenidad = ListaAmenidadSerializer(lista_amenidades, many = True)
+                serializer_foto = FotoSerializer(foto)
+                #serializer_departamento = DepartamentoSerializer(departameto)
+                #serializer_ciudad = CiudadSerializer(ciudad_user)
+                return Response({
+                    'publicacion': serializer_publicacion.data,
+                    'perfil': serializer_perfil.data,
+                    'amenidades' : serializer_amenidad.data,
+                    'foto' : serializer_foto.data,
+                    #'departamento':serializer_departamento,
+                    #'ciudad':serializer_ciudad
+                },status = status.HTTP_200_OK)
+        else:
+            print("por que no funciona?")
+            return Response(
+                {"mensaje": "hola desde mi error"},
+                status= status.HTTP_200_OK
+            )

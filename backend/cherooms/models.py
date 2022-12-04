@@ -177,6 +177,7 @@ class PerfilUser(models.Model):
     foto_perfil = models.ImageField(upload_to=perfil_directory_path, blank = True, null = True)
     genero = models.CharField(max_length=1024)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    necesita_cuarto = models.BooleanField(default = False)    
     foto64 = models.CharField(max_length=1024, blank=True, null=True, default="")
 
     #staff = models.BooleanField(default=False)
