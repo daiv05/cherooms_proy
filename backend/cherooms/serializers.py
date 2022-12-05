@@ -252,7 +252,7 @@ class RegisterSerializer(serializers.Serializer):
                     email = self.data["email"],
                     apellidos_user = self.data["lastName"],
                     necesita_cuarto = self.data["necesita_cuarto"],
-                    ciudad = ciudad
+                    ciudad = ciudad,
                 )
                 perfil.save() 
                 resultado["perfil"] = perfil
