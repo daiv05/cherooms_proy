@@ -868,34 +868,35 @@ class UserRegisterView(APIView):
 
 class AlquilerView (APIView):
   def get(self, request, pk, format=None):    
-        id_publicacion = self.get_object(pk)
+        id_publicacion = pk
 
         if id_publicacion:
-            publicacion=PublicacionAlquiler.objects.get(publcacion_id=id_publicacion)
+            publicacion=PublicacionAlquiler.objects.get(publicacion_id=id_publicacion)
 
             if publicacion:
                 id_perfil = publicacion.perfil
-                perfilUser=PerfilUser.objects.get(perfil_id=id_perfil)
-                ciudadUser=Ciudad.objects.get(ciudad_id=perfilUser.ciudad)
-                departamento=Departamento.objects.get(departamento_id=ciudadUser.departamento)
-                lista_amenidad=ListaAmenidad.objects.filter(publicacion=publicacion.publicacion_id)
+                perfilUser = PerfilUser.objects.get(perfil_id=id_perfil.perfil_id)
+                ciudadUser = Ciudad.objects.get(ciudad_id=perfilUser.ciudad.ciudad_id)
+                departamento = Departamento.objects.get(departamento_id=ciudadUser.departamento.departamento_id)
+                lista_id_amenidad = ListaAmenidad.objects.filter(publicacion=publicacion.publicacion_id).values_list('amenidad')
+                lista_amenidad = Amenidad.objects.filter(amenidad_id__in = lista_id_amenidad)
                 foto=Foto.objects.get(publi_alquiler=publicacion.publicacion_id)
 
                 serializer_publicacion=PublicacionAlquilerSerializer(publicacion)
                 serializer_perfilUser=PerfilUserSerializer(perfilUser)
                 serializer_ciudadUser=CiudadSerializer(ciudadUser)
                 serializer_departamento=DepartamentoSerializer(departamento)
-                serializer_listaAmenidad=ListaAmenidadSerializer(lista_amenidad)
+                serializer_listaAmenidad = AmenidadSerializer(lista_amenidad, many = True)
                 serializer_foto=FotoSerializer(foto)
 
         return Response(
             {
-                'publicacion': serializer_publicacion,
-                'perfil':serializer_perfilUser,
-                'ciudad':serializer_ciudadUser,
-                'departamento':serializer_departamento,
-                'amenidades':serializer_listaAmenidad,
-                'foto':serializer_foto
+                'publicacion': serializer_publicacion.data,
+                'perfil':serializer_perfilUser.data,
+                'ciudad':serializer_ciudadUser.data,
+                'departamento':serializer_departamento.data,
+                'amenidades':serializer_listaAmenidad.data,
+                'foto':serializer_foto.data
 
             },
             status=status.HTTP_200_OK)
