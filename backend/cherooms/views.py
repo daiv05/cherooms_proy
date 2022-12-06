@@ -87,7 +87,7 @@ class PerfilUserDetail(APIView):
 
     def put(self, request, pk, format=None):
         perfil = self.get_object(pk)
-        serializer = PerfilUserSerializer(perfil, data=request.data)
+        serializer = PerfilUserSerializer(perfil, data=request.data, partial = True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
